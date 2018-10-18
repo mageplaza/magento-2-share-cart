@@ -22,6 +22,8 @@
 
 namespace Mageplaza\ShareCart\Controller\Index;
 use \Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Catalog\Model\Product;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 
 class Index extends \Magento\Framework\App\Action\Action
 {
@@ -30,9 +32,7 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     protected $_productRepository;
 
-    /**
-     * @var
-     */
+    /** @var $cartepository */
     protected $cartepository;
 
     /**
@@ -45,7 +45,8 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     protected $cart;
 
-
+    /** @var \Magento\Store\Model\StoreManagerInterface  */
+    protected $_storeManager;
     /**
      * Index constructor.
      * @param \Magento\Framework\App\Action\Context $context
@@ -59,12 +60,14 @@ class Index extends \Magento\Framework\App\Action\Action
         \Magento\Framework\View\Result\PageFactory $pageFactory,
         CartRepositoryInterface $cartRepository,
         \Magento\Checkout\Model\Cart $cart,
-        \Magento\Catalog\Model\ProductRepository $productRepository)
+        \Magento\Catalog\Model\ProductRepository $productRepository,
+        \Magento\Store\Model\StoreManagerInterface $storeManager)
     {
         $this->_pageFactory = $pageFactory;
         $this->cartRepository = $cartRepository;
         $this->cart = $cart;
         $this->_productRepository = $productRepository;
+        $this->_storeManager = $storeManager;
         return parent::__construct($context);
     }
 
@@ -76,18 +79,24 @@ class Index extends \Magento\Framework\App\Action\Action
         /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
         $items = $quote->getItemsCollection();
-
         foreach ($items as $item) {
             if (!$item->getParentItemId()) {
-                $options = $item->getProduct()->getTypeInstance(true)->getOrderOptions($item->getProduct());
-                $info = $options['info_buyRequest'];
-                if($item->getProductType() == 'configurable') {
-                    $product = $this->_productRepository->get($item->getSku());
-                    $this->cart->addProduct($product, $info);
-                }else if($item->getProductType() == 'bundle'){
-                    $this->cart->addProduct($item->getProduct(), $info);
-                }else{
-                    $this->cart->addProduct($item->getProduct(), $item->getQty());
+                $storeId = $this->_storeManager->getStore()->getId();
+                try {
+                    /**
+                     * We need to reload product in this place, because products
+                     * with the same id may have different sets of order attributes.
+                     */
+                    $product = $this->_productRepository->getById($item->getProductId(), false, $storeId, true);
+                    $options = $item->getProduct()->getTypeInstance(true)->getOrderOptions($item->getProduct());
+                    $info = $options['info_buyRequest'];
+                    if ($item->getProductType() == 'configurable' || $item->getProductType() == 'bundle') {
+                        $this->cart->addProduct($product, $info);
+                    }else{
+                        $this->cart->addProduct($item->getProduct(), $item->getQty());
+                    }
+                } catch (NoSuchEntityException $e) {
+                    return $this;
                 }
             }
 
@@ -96,4 +105,5 @@ class Index extends \Magento\Framework\App\Action\Action
 
         return $resultRedirect->setPath('checkout/cart');
     }
+
 }

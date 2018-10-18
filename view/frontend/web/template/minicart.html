@@ -19,14 +19,37 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
  -->
+<!--ko if: isDisplay() -->
+<div class="actions">
+    <div class="primary sharecart">
+        <button class="action primary sharecart"
+                type="button"
+                data-bind="attr: {
+                                        title: $t('Share Cart')
+                                    },click: function(event) { return copyQuote(event) }
 
-<button
-        type="button"
-        data-bind="attr: {
-                                title: $t('Share Cart')
-                            },click: function(event) { return copyQuote(event) }
-
-                        "
-        translate="'Share Cart'"
-/>
+                                "
+                translate="'Share Cart'"
+        />
+    </div>
+</div>
 <input id="mpQuote" data-bind="value: getQuoteId()"/>
+<!-- /ko -->
+<style type="text/css">
+    #mpQuote {
+        display:none;
+    }
+
+    .actions .primary.sharecart{
+        margin: 0 10px 15px;
+    }
+
+    button.action.primary.sharecart {
+        display: block;
+        width: 100%;
+        line-height: 2.2rem;
+        padding: 14px 17px;
+        font-size: 1.8rem;
+        margin:unset;
+    }
+</style>

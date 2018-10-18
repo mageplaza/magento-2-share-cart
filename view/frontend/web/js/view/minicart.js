@@ -29,14 +29,23 @@ define([
         },
 
         getQuoteId: function (){
+
             return customerData.get('cart')().quote_url;
         },
 
         copyQuote: function(){
             var quoteId=document.getElementById("mpQuote");
-            quoteId.select();
-            document.execCommand("copy")
 
+            /* Select the text field */
+            quoteId.select();
+
+            /* Copy the text inside the text field */
+            document.execCommand("copy")
+            console.log('copied');
         },
+
+        isDisplay: function(){
+            return customerData.get('cart')().summary_count;
+        }
     });
 });
