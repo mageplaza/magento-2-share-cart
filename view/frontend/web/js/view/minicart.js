@@ -40,8 +40,7 @@ define([
             quoteId.select();
 
             /* Copy the text inside the text field */
-            document.execCommand("copy")
-            console.log('copied');
+            document.execCommand("copy");
         },
 
         isDisplay: function(){
