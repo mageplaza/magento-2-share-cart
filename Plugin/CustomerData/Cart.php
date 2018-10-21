@@ -66,7 +66,7 @@ class Cart
     public function afterGetSectionData(\Magento\Checkout\CustomerData\Cart $subject, $result)
     {
         if (null === $this->quoteId) {
-            $this->quoteId = $this->checkoutSession->getQuote()->getId();
+            $this->quoteId = $this->checkoutSession->getQuoteId();
         }
         $result['quote_url'] = $this->_urlBuilder->getUrl('sharecart/index/index',['quote_id'=> base64_encode($this->quoteId)]);
         return $result;

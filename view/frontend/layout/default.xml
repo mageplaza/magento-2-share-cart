@@ -33,7 +33,7 @@
                                         <item name="mp_sharecart" xsi:type="array">
                                             <item name="component" xsi:type="string">Mageplaza_ShareCart/js/view/minicart</item>
                                             <item name="config" xsi:type="array">
-                                                    <item name="componentDisabled" xsi:type="helper" helper="Mageplaza\ShareCart\Helper\Data::isEnabled"/>
+                                                    <item name="componentDisabled" xsi:type="helper" helper="Mageplaza\ShareCart\Helper\Data::isDisabled"/>
                                             </item>
                                         </item>
                                     </item>

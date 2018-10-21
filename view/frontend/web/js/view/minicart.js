@@ -29,19 +29,16 @@ define([
         },
 
         getQuoteId: function (){
-
             return customerData.get('cart')().quote_url;
         },
 
         copyQuote: function(){
-            var quoteId=document.getElementById("mpQuote");
-
-            /* Select the text field */
-            quoteId.select();
-
-            /* Copy the text inside the text field */
-            document.execCommand("copy")
-            console.log('copied');
+            const quoteUrl = document.createElement('textarea');
+            quoteUrl.value = customerData.get('cart')().quote_url;
+            document.body.appendChild(quoteUrl);
+            quoteUrl.select();
+            document.execCommand('copy');
+            document.body.removeChild(quoteUrl);
         },
 
         isDisplay: function(){

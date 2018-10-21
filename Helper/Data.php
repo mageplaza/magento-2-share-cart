@@ -29,4 +29,41 @@ use Mageplaza\Core\Helper\AbstractData;
  */
 class Data extends AbstractData
 {
+    const CONFIG_MODULE_PATH                 = 'sharecart';
+    const BUSINESS_INFORMATION_CONFIGURATION = 'sharecart/general/business_information';
+
+    public function isDisabled()
+    {
+        return !$this->isEnabled();
+    }
+
+    public function getCompanyName($storeId =null)
+    {
+       return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/company',$storeId);
+    }
+
+    public function getAddress($storeId =null)
+    {
+        return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/address',$storeId);
+    }
+
+    public function getVATNumber($storeId =null)
+    {
+        return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/vat_number',$storeId);
+    }
+
+    public function getPhone($storeId =null)
+    {
+        return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/phone',$storeId);
+    }
+
+    public function getEmail($storeId =null)
+    {
+        return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/contact',$storeId);
+    }
+
+    public function getRegisteredNumber($storeId =null)
+    {
+       return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/registered',$storeId);
+    }
 }

@@ -22,17 +22,38 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <section id="sharecart" translate="label comment" sortOrder="10" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+        <section id="sharecart" translate="label comment" sortOrder="50" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Share Cart</label>
             <tab>mageplaza</tab>
             <resource>Mageplaza_ShareCart::configuration</resource>
             <group id="general" translate="label comment" sortOrder="10" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General Configuration</label>
                 <field id="enabled" translate="label comment" sortOrder="10" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Enable Share Cart</label>
-                    <comment><![CDATA[Select <strong>Yes</strong> to enable the module.]]></comment>
+                    <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Select <strong>Yes</strong> to enable the module.]]></comment>
                 </field>
+                <group id="business_information" translate="label" type="text" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Business Information</label>
+                    <field id="company" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Company Name</label>
+                    </field>
+                    <field id="address" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Address</label>
+                    </field>
+                    <field id="vat_number" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>VAT Number</label>
+                    </field>
+                    <field id="phone" translate="label" type="text" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Phone</label>
+                    </field>
+                    <field id="contact" translate="label" type="text" sortOrder="600" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Email</label>
+                    </field>
+                    <field id="registered" translate="label" type="text" sortOrder="700" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Registered Number</label>
+                    </field>
+                </group>
             </group>
         </section>
     </system>
