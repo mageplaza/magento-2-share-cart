@@ -53,6 +53,9 @@
                     <field id="registered" translate="label" type="text" sortOrder="700" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                         <label>Registered Number</label>
                     </field>
+                    <field id="message" translate="label" type="text" sortOrder="800" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Warning Message</label>
+                    </field>
                 </group>
             </group>
         </section>

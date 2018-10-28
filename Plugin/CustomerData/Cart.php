@@ -49,6 +49,12 @@ class Cart
      */
     protected $_urlBuilder;
 
+    /**
+     * Cart constructor.
+     * @param AbstractData $helperData
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magento\Framework\UrlInterface $urlBuilder
+     */
     public function __construct(AbstractData $helperData, \Magento\Checkout\Model\Session $checkoutSession, \Magento\Framework\UrlInterface $urlBuilder)
     {
         $this->checkoutSession =$checkoutSession;

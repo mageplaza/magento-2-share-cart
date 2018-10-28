@@ -21,9 +21,7 @@
  */
 
 namespace Mageplaza\ShareCart\Controller\Index;
-use \Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Catalog\Model\Product;
-use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Quote\Api\CartRepositoryInterface;
 use Mageplaza\ShareCart\Helper\Data;
 
 class Index extends \Magento\Framework\App\Action\Action
@@ -81,33 +79,37 @@ class Index extends \Magento\Framework\App\Action\Action
         $resultRedirect = $this->resultRedirectFactory->create();
         if($this->helper->isEnabled()) {
             $quoteId = base64_decode($this->getRequest()->getParam('quote_id'), true);
-            $quote = $this->cartRepository->get($quoteId);
+            if($quoteId) {
+                $quote = $this->cartRepository->get($quoteId);
 
 
-            $items = $quote->getItemsCollection();
-            foreach ($items as $item) {
-                if (!$item->getParentItemId()) {
-                    $storeId = $this->_storeManager->getStore()->getId();
-                    try {
-                        /**
-                         * We need to reload product in this place, because products
-                         * with the same id may have different sets of order attributes.
-                         */
-                        $product = $this->_productRepository->getById($item->getProductId(), false, $storeId, true);
-                        $options = $item->getProduct()->getTypeInstance(true)->getOrderOptions($item->getProduct());
-                        $info = $options['info_buyRequest'];
-                        if ($item->getProductType() == 'configurable' || $item->getProductType() == 'bundle') {
-                            $this->cart->addProduct($product, $info);
-                        } else {
-                            $this->cart->addProduct($item->getProduct(), $item->getQty());
+                $items = $quote->getItemsCollection();
+                foreach ($items as $item) {
+                    if (!$item->getParentItemId()) {
+                        $storeId = $this->_storeManager->getStore()->getId();
+                        try {
+                            /**
+                             * We need to reload product in this place, because products
+                             * with the same id may have different sets of order attributes.
+                             */
+                            $product = $this->_productRepository->getById($item->getProductId(), false, $storeId, true);
+                            if($product) {
+                                $options = $item->getProduct()->getTypeInstance(true)->getOrderOptions($item->getProduct());
+                                $info = $options['info_buyRequest'];
+                                if ($item->getProductType() == 'configurable' || $item->getProductType() == 'bundle') {
+                                    $this->cart->addProduct($product, $info);
+                                } else {
+                                    $this->cart->addProduct($item->getProduct(), $item->getQty());
+                                }
+                            }
+                        } catch (NoSuchEntityException $e) {
+                            return $this;
                         }
-                    } catch (NoSuchEntityException $e) {
-                        return $this;
                     }
-                }
 
+                }
+                $this->cart->save();
             }
-            $this->cart->save();
         }
         return $resultRedirect->setPath('checkout/cart');
     }

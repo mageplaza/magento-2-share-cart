@@ -1,5 +1,3 @@
-<?xml version="1.0"?>
-<!--
 /**
  * Mageplaza
  *
@@ -19,11 +17,27 @@
  * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <body>
-        <referenceContainer name="content">
-            <block class="Mageplaza\ShareCart\Block\Cart\Button" name="mp.sharecart" template="Mageplaza_ShareCart::cart/button.phtml" after="checkout.cart.order.actions"/>
-        </referenceContainer>
-    </body>
-</page>
+.actions .primary.sharecart{
+    margin: 0 10px 15px;
+}
+
+button.action.primary.sharecart {
+    display: block;
+    width: 100%;
+    line-height: 2.2rem;
+    padding: 14px 17px;
+    font-size: 1.8rem;
+    margin:unset;
+}
+
+.mp-sharecart-popup .modal-inner-wrap {
+    width: 600px;
+}
+
+.mp-popup-cart {
+    display:none;
+}
+
+#mp_show_download_share{
+    display:inline-block;
+}

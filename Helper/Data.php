@@ -14,7 +14,7 @@
  * version in the future.
  *
  * @category    Mageplaza
- * @package     Mageplaza_Osc
+ * @package     Mageplaza_ShareCart
  * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
@@ -32,38 +32,74 @@ class Data extends AbstractData
     const CONFIG_MODULE_PATH                 = 'sharecart';
     const BUSINESS_INFORMATION_CONFIGURATION = 'sharecart/general/business_information';
 
+    /**
+     * @return bool
+     */
     public function isDisabled()
     {
         return !$this->isEnabled();
     }
 
+    /**
+     * @param null $storeId
+     * @return array|mixed
+     */
     public function getCompanyName($storeId =null)
     {
        return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/company',$storeId);
     }
 
+    /**
+     * @param null $storeId
+     * @return array|mixed
+     */
     public function getAddress($storeId =null)
     {
         return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/address',$storeId);
     }
 
+    /**
+     * @param null $storeId
+     * @return array|mixed
+     */
     public function getVATNumber($storeId =null)
     {
         return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/vat_number',$storeId);
     }
 
+    /**
+     * @param null $storeId
+     * @return array|mixed
+     */
     public function getPhone($storeId =null)
     {
         return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/phone',$storeId);
     }
 
+    /**
+     * @param null $storeId
+     * @return array|mixed
+     */
     public function getEmail($storeId =null)
     {
         return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/contact',$storeId);
     }
 
+    /**
+     * @param null $storeId
+     * @return array|mixed
+     */
     public function getRegisteredNumber($storeId =null)
     {
        return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/registered',$storeId);
+    }
+
+    /**
+     * @param null $storeId
+     * @return array|mixed
+     */
+    public function getWarningMessage($storeId=null)
+    {
+        return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/message',$storeId);
     }
 }

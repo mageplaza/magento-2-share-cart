@@ -22,7 +22,7 @@ namespace Mageplaza\ShareCart\Block\Cart;
 
 use Magento\Customer\Model\Context;
 use \Magento\Quote\Api\CartRepositoryInterface;
-class Button extends \Magento\Framework\View\Element\Template
+class Items extends \Magento\Framework\View\Element\Template
 {
     /** @var $cartepository */
     protected $cartRepository;
@@ -36,10 +36,12 @@ class Button extends \Magento\Framework\View\Element\Template
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $_storeManager;
+
     /**
      * @var \Magento\Directory\Model\Currency
      */
     protected $_currency;
+
     /**
      * @var \Magento\Catalog\Model\ProductRepository
      */
@@ -51,12 +53,7 @@ class Button extends \Magento\Framework\View\Element\Template
     protected $configurable;
 
     /**
-     * @var \Magento\Framework\UrlInterface
-     */
-    protected $_urlBuilder;
-
-    /**
-     * Button constructor.
+     * Items constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param CartRepositoryInterface $cartRepository
      * @param \Magento\Checkout\Model\Session $checkoutSession
@@ -64,7 +61,6 @@ class Button extends \Magento\Framework\View\Element\Template
      * @param \Magento\Directory\Model\Currency $currency
      * @param \Magento\Catalog\Model\ProductRepository $productRepository
      * @param \Magento\ConfigurableProduct\Model\Product\Type\Configurable $configurable
-     * @param \Magento\Framework\UrlInterface $urlBuilder
      * @param array $data
      */
     public function __construct(
@@ -75,7 +71,6 @@ class Button extends \Magento\Framework\View\Element\Template
         \Magento\Directory\Model\Currency $currency,
         \Magento\Catalog\Model\ProductRepository $productRepository,
         \Magento\ConfigurableProduct\Model\Product\Type\Configurable $configurable,
-        \Magento\Framework\UrlInterface $urlBuilder,
         array $data = [])
     {
         $this->_storeManager = $storeManager;
@@ -84,7 +79,6 @@ class Button extends \Magento\Framework\View\Element\Template
         $this->checkoutSession =$checkoutSession;
         $this->_productRepository = $productRepository;
         $this->configurable  =$configurable;
-        $this->_urlBuilder = $urlBuilder;
         parent::__construct($context, $data);
     }
     /**
@@ -118,8 +112,13 @@ class Button extends \Magento\Framework\View\Element\Template
     }
 
     /**
+     * Get allowed store currency codes
+     *
+     * If base currency is not allowed in current website config scope,
+     * then it can be disabled with $skipBaseNotAllowed
+     *
      * @param bool $skipBaseNotAllowed
-     * @return mixed
+     * @return array
      */
     public function getAvailableCurrencyCodes($skipBaseNotAllowed = false)
     {
@@ -220,11 +219,4 @@ class Button extends \Magento\Framework\View\Element\Template
         return $this->checkoutSession->getQuote()->getBaseSubtotal();
     }
 
-    /**
-     * @return string
-     */
-    public function getLinkDownload()
-    {
-        return $this->_urlBuilder->getUrl('sharecart/index/download');
-    }
 }

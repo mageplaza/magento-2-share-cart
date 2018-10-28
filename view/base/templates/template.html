@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<body>
+<p><strong>{{trans "Publisher of this Price List:"}}</strong></p>
+<div class="business-information">
+    {{depend company}}
+    <p>{{var company}}</p>
+    {{/depend}}
+
+    {{depend address}}
+    <p>{{var address}}</p>
+    {{/depend}}
+
+    {{depend contact}}
+    <p>{{var contact}}</p>
+    {{/depend}}
+
+    {{depend phone}}
+    <p>{{var phone}}</p>
+    {{/depend}}
+
+    {{depend registered}}
+    <p>{{var registered}}</p>
+    {{/depend}}
+
+    {{depend vat_number}}
+    <p>{{var vat_number}}</p>
+    {{/depend}}
+</div>
+<p><strong>{{trans "Pricelist made "}}<span>{{var timezone}}</span></strong></p>
+    {{depend message}}
+    <p>{{var message}}</p>
+    {{/depend}}
+{{layout handle="sharecart_index_download"}}
+</body>
+</html>
+<style>
+    table{
+        border-collapse: collapse;
+        width: 100%;
+    }
+    table tr th,
+    table tr td{
+        border: 1px solid black;
+    }
+    table tr:first-child{
+        border-bottom: 2px solid black;
+    }
+    table tr th{
+        border-top: none;
+    }
+    table tr th:nth-child(1){
+        border-left: none;
+    }
+    table tr th:last-child{
+        border-right: none;
+    }
+    td.qty{
+        text-align: center;
+    }
+    table tr th:nth-child(1),
+    table tr td:nth-child(1){
+        text-align: center;
+    }
+    table tr th:nth-child(2),
+    table tr th:nth-child(3)
+    {
+        text-align: left;
+    }
+    table tr th:nth-child(4),
+    table tr td:nth-child(4),
+    table tr th:nth-child(5),
+    table tr td:nth-child(5)
+    {
+        text-align: right;
+    }
+    table tr th:nth-child(5),
+    table tr td:nth-child(5){
+        border-left: 2px solid black;
+    }
+    table tr:last-child td:not(:nth-child(5)){
+        border: none;
+    }
+
+    table tr.tr1 td.td1,
+    table tr.tr1 td.td2,
+    table tr.tr1 td.td3,
+    table tr.tr1 td.td4
+    {
+        border:none;
+    }
+
+    table tr td.td5,
+    table tr th.th5{
+        border-right:none;
+    }
+
+    table tr:last-child td:nth-child(5){
+        border-bottom: 2px solid black;
+    }
+    .mark{
+        font-weight: 600;
+    }
+</style>
