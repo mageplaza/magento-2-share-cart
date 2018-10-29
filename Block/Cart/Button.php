@@ -123,6 +123,7 @@ class Button extends \Magento\Framework\View\Element\Template
      */
     public function getAvailableCurrencyCodes($skipBaseNotAllowed = false)
     {
+
         return $this->_storeManager->getStore()->getAvailableCurrencyCodes($skipBaseNotAllowed);
     }
 

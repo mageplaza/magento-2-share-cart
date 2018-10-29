@@ -23,10 +23,22 @@ define([
 ], function (Component,customerData) {
     'use strict';
 
+    var isReload =true;
     return Component.extend({
         defaults: {
             template: 'Mageplaza_ShareCart/minicart'
         },
+
+        initialize: function () {
+            this._super();
+
+            if (isReload) {
+                customerData.reload(['cart'], false);
+                isReload = false;
+            }
+            this.customer = customerData.get('cart');
+        },
+
 
         getQuoteId: function (){
             return customerData.get('cart')().quote_url;
