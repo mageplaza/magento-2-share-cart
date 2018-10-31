@@ -25,6 +25,8 @@
         <sharecart>
             <general>
                 <enabled>1</enabled>
+                <file_name>GlobalData Pricelist made</file_name>
+                <timestamp>1</timestamp>
             </general>
         </sharecart>
     </default>

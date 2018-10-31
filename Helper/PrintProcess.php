@@ -22,28 +22,20 @@
 namespace Mageplaza\ShareCart\Helper;
 
 use Magento\Checkout\Model\Session;
-use Magento\Framework\App\Area;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Helper\Context;
-use Magento\Framework\App\State;
 use Magento\Framework\Filesystem;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Framework\Stdlib\DateTime\TimeZone;
 use Magento\Store\Model\StoreManagerInterface;
-use Mageplaza\Core\Helper\AbstractData;
 
 /**
  * Class PrintProcess
  * @package Mageplaza\PdfInvoice\Helper
  */
-class PrintProcess extends AbstractData
+class PrintProcess extends Data
 {
-    /**
-     * Save pdf file location
-     */
-    const MAGEPLAZA_DIR = 'var/mageplaza';
-
     /**
      * @var DateTime
      */
@@ -123,6 +115,19 @@ class PrintProcess extends AbstractData
         $rootDirectory = $this->fileSystem->getDirectoryRead(DirectoryList::ROOT);
 
         return $rootDirectory->readFile($relativePath);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileName()
+    {
+        $name = $this->getConfigGeneral('file_name') ?: 'cart';
+        if ($this->getConfigGeneral('timestamp')) {
+            $name .= ' ' . $this->dateTime->date('Y-m-d H.i');
+        }
+
+        return $name . '.pdf';
     }
 
     /**

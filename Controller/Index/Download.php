@@ -89,6 +89,6 @@ class Download extends Action
         $processor->setStore($storeId);
         $html = $processor->processTemplate();
         $mpdf->WriteHTML($html);
-        $mpdf->Output('cart.pdf', 'D');
+        $mpdf->Output($this->printProcess->getFileName(), 'D');
     }
 }
