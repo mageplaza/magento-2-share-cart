@@ -21,12 +21,10 @@
  -->
 <!--ko if: isDisplay() -->
 <div class="actions">
-    <div class="primary sharecart">
-        <button class="action primary sharecart"
-                type="button"
-                data-bind="attr: {title: $t('Share Cart')},click: function(event) { return copyQuote(event) }"
-                translate="'Share Cart'"
-        />
+    <div class="secondary sharecart" style="text-align: center">
+        <a class="action sharecart mp-sharecart-minicart" data-bind="click: copyQuote, event: {mouseleave: leaveQuote}" style="cursor: pointer">
+            <span data-bind="i18n: 'Share Cart'"></span>
+        </a>
     </div>
 </div>
 <!-- /ko -->

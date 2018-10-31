@@ -49,11 +49,6 @@ class Index extends Action
     protected $cartRepository;
 
     /**
-     * @var PageFactory
-     */
-    protected $_pageFactory;
-
-    /**
      * @var Cart
      */
     protected $cart;
@@ -88,7 +83,6 @@ class Index extends Action
         Data $helper
     )
     {
-        $this->_pageFactory       = $pageFactory;
         $this->cartRepository     = $cartRepository;
         $this->cart               = $cart;
         $this->_productRepository = $productRepository;
@@ -108,7 +102,7 @@ class Index extends Action
         /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
         if ($this->helper->isEnabled()) {
-            $quoteId = base64_decode($this->getRequest()->getParam('quote_id'), true);
+            $quoteId = base64_decode($this->getRequest()->getParam('key'), true);
             if ($quoteId) {
                 $quote = $this->cartRepository->get($quoteId);
 

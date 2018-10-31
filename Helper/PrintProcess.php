@@ -55,11 +55,6 @@ class PrintProcess extends AbstractData
     protected $directoryList;
 
     /**
-     * @var HelperData
-     */
-    protected $helperData;
-
-    /**
      * @var \Magento\Framework\Filesystem
      */
     protected $fileSystem;
@@ -68,11 +63,6 @@ class PrintProcess extends AbstractData
      * @var $templateVars
      */
     protected $templateVars;
-
-    /**
-     * @var \Magento\Framework\App\State
-     */
-    protected $state;
 
     /**
      * @var Data
@@ -92,7 +82,6 @@ class PrintProcess extends AbstractData
     /**
      * PrintProcess constructor.
      * @param Context $context
-     * @param State $state
      * @param Filesystem $fileSystem
      * @param DirectoryList $directoryList
      * @param StoreManagerInterface $storeManager
@@ -104,7 +93,6 @@ class PrintProcess extends AbstractData
      */
     public function __construct(
         Context $context,
-        State $state,
         Filesystem $fileSystem,
         DirectoryList $directoryList,
         StoreManagerInterface $storeManager,
@@ -116,7 +104,6 @@ class PrintProcess extends AbstractData
     )
     {
         $this->checkoutSession = $checkoutSession;
-        $this->state           = $state;
         $this->fileSystem      = $fileSystem;
         $this->directoryList   = $directoryList;
         $this->helper          = $helper;
@@ -136,20 +123,6 @@ class PrintProcess extends AbstractData
         $rootDirectory = $this->fileSystem->getDirectoryRead(DirectoryList::ROOT);
 
         return $rootDirectory->readFile($relativePath);
-    }
-
-    /**
-     * @param $storeId
-     * @return int
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    public function checkStoreId($storeId)
-    {
-        if ($this->state->getAreaCode() == Area::AREA_FRONTEND) {
-            $storeId = $this->storeManager->getStore()->getId();
-        }
-
-        return $storeId;
     }
 
     /**

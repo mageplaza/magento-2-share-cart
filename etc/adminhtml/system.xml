@@ -33,30 +33,30 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment><![CDATA[Select <strong>Yes</strong> to enable the module.]]></comment>
                 </field>
-                <group id="business_information" translate="label" type="text" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Business Information</label>
-                    <field id="company" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Company Name</label>
-                    </field>
-                    <field id="address" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Address</label>
-                    </field>
-                    <field id="vat_number" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>VAT Number</label>
-                    </field>
-                    <field id="phone" translate="label" type="text" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Phone</label>
-                    </field>
-                    <field id="contact" translate="label" type="text" sortOrder="600" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Email</label>
-                    </field>
-                    <field id="registered" translate="label" type="text" sortOrder="700" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Registered Number</label>
-                    </field>
-                    <field id="message" translate="label" type="text" sortOrder="800" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                        <label>Warning Message</label>
-                    </field>
-                </group>
+            </group>
+            <group id="business_information" translate="label" type="text" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Business Information</label>
+                <field id="company" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Company Name</label>
+                </field>
+                <field id="address" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Address</label>
+                </field>
+                <field id="vat_number" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>VAT Number</label>
+                </field>
+                <field id="phone" translate="label" type="text" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Phone</label>
+                </field>
+                <field id="contact" translate="label" type="text" sortOrder="600" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Email</label>
+                </field>
+                <field id="registered" translate="label" type="text" sortOrder="700" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Registered Number</label>
+                </field>
+                <field id="message" translate="label" type="text" sortOrder="800" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Warning Message</label>
+                </field>
             </group>
         </section>
     </system>

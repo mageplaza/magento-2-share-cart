@@ -27,7 +27,7 @@ use Mageplaza\Core\Helper\AbstractData;
 
 /**
  * Class Cart
- * @package Mageplaza\RewardPoints\Plugin\CustomerData
+ * @package Mageplaza\ShareCart\Plugin\CustomerData
  */
 class Cart
 {
@@ -82,7 +82,7 @@ class Cart
         if (null === $this->quoteId) {
             $this->quoteId = $this->checkoutSession->getQuoteId();
         }
-        $result['quote_url'] = $this->_urlBuilder->getUrl('sharecart/index/index', ['quote_id' => base64_encode($this->quoteId)]);
+        $result['quote_url'] = $this->_urlBuilder->getUrl('sharecart', ['key' => base64_encode($this->quoteId)]);
 
         return $result;
     }

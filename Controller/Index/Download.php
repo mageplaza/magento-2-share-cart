@@ -25,8 +25,6 @@ namespace Mageplaza\ShareCart\Controller\Index;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\ShareCart\Helper\PrintProcess;
 use Mageplaza\ShareCart\Model\Template\Processor;
 use Mpdf\Mpdf;
@@ -48,21 +46,6 @@ class Download extends Action
     protected $checkoutSession;
 
     /**
-     * @var Data
-     */
-    protected $helper;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    protected $storeManager;
-
-    /**
-     * @var DirectoryList
-     */
-    protected $directoryList;
-
-    /**
      * @var PrintProcess
      */
     protected $printProcess;
@@ -71,19 +54,17 @@ class Download extends Action
      * Download constructor.
      * @param Context $context
      * @param Session $checkoutSession
-     * @param StoreManagerInterface $storeManager
      * @param Processor $templateProcessor
      * @param PrintProcess $printProcess
      */
     public function __construct(
         Context $context,
         Session $checkoutSession,
-        StoreManagerInterface $storeManager,
         Processor $templateProcessor,
-        PrintProcess $printProcess)
+        PrintProcess $printProcess
+    )
     {
         $this->checkoutSession   = $checkoutSession;
-        $this->storeManager      = $storeManager;
         $this->templateProcessor = $templateProcessor;
         $this->printProcess      = $printProcess;
 

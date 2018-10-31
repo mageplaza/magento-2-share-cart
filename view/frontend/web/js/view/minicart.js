@@ -18,9 +18,11 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 define([
+    'jquery',
     'uiComponent',
-    'Magento_Customer/js/customer-data'
-], function (Component, customerData) {
+    'Magento_Customer/js/customer-data',
+    'mage/translate'
+], function ($, Component, customerData, $t) {
     'use strict';
 
     var isReload = true;
@@ -43,13 +45,21 @@ define([
             return customerData.get('cart')().quote_url;
         },
 
-        copyQuote: function () {
+        copyQuote: function (object, e) {
             const quoteUrl = document.createElement('textarea');
             quoteUrl.value = customerData.get('cart')().quote_url;
             document.body.appendChild(quoteUrl);
             quoteUrl.select();
             document.execCommand('copy');
             document.body.removeChild(quoteUrl);
+
+            e.currentTarget.setAttribute('class', 'mp-tooltipped');
+            e.currentTarget.setAttribute('aria-label', $t('Copied!'));
+        },
+
+        leaveQuote: function (object, e) {
+            e.currentTarget.removeAttribute('class');
+            e.currentTarget.removeAttribute('aria-label');
         },
 
         isDisplay: function () {

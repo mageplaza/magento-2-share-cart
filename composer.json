@@ -2,6 +2,7 @@
   "name": "mageplaza/module-share-cart",
   "description": "Magento 2 Share Cart extension",
   "type": "magento2-module",
+  "version": "1.0.0",
   "license": "proprietary",
   "authors": [
     {

@@ -25,11 +25,11 @@ use Magento\Catalog\Model\ProductRepository;
 use Magento\Checkout\Model\Session;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Directory\Model\Currency;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Store\Model\StoreManagerInterface;
+use Magento\Quote\Model\Quote;
 
 /**
  * Class Button
@@ -38,19 +38,9 @@ use Magento\Store\Model\StoreManagerInterface;
 class Button extends Template
 {
     /**
-     * @var CartRepositoryInterface
-     */
-    protected $cartRepository;
-
-    /**
      * @var \Magento\Customer\Model\Session
      */
     protected $checkoutSession;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    protected $_storeManager;
 
     /**
      * @var Currency
@@ -73,96 +63,44 @@ class Button extends Template
     protected $_urlBuilder;
 
     /**
+     * @var PriceCurrencyInterface
+     */
+    protected $priceCurrency;
+
+    /**
+     * @var Quote
+     */
+    protected $_quote;
+
+    /**
      * Button constructor.
      * @param Context $context
-     * @param CartRepositoryInterface $cartRepository
      * @param Session $checkoutSession
-     * @param StoreManagerInterface $storeManager
      * @param Currency $currency
      * @param ProductRepository $productRepository
      * @param Configurable $configurable
      * @param UrlInterface $urlBuilder
+     * @param PriceCurrencyInterface $priceCurrency
      * @param array $data
      */
     public function __construct(
         Context $context,
-        CartRepositoryInterface $cartRepository,
         Session $checkoutSession,
-        StoreManagerInterface $storeManager,
         Currency $currency,
         ProductRepository $productRepository,
         Configurable $configurable,
         UrlInterface $urlBuilder,
+        PriceCurrencyInterface $priceCurrency,
         array $data = [])
     {
-        $this->_storeManager      = $storeManager;
         $this->_currency          = $currency;
-        $this->cartRepository     = $cartRepository;
         $this->checkoutSession    = $checkoutSession;
         $this->_productRepository = $productRepository;
         $this->configurable       = $configurable;
         $this->_urlBuilder        = $urlBuilder;
+        $this->priceCurrency      = $priceCurrency;
 
         parent::__construct($context, $data);
-    }
-
-    /**
-     * Get store base currency code
-     *
-     * @return string
-     */
-    public function getBaseCurrencyCode()
-    {
-        return $this->_storeManager->getStore()->getBaseCurrencyCode();
-    }
-
-    /**
-     * Get current store currency code
-     *
-     * @return string
-     */
-    public function getCurrentCurrencyCode()
-    {
-        return $this->_storeManager->getStore()->getCurrentCurrencyCode();
-    }
-
-    /**
-     * Get default store currency code
-     *
-     * @return string
-     */
-    public function getDefaultCurrencyCode()
-    {
-        return $this->_storeManager->getStore()->getDefaultCurrencyCode();
-    }
-
-    /**
-     * @param bool $skipBaseNotAllowed
-     * @return mixed
-     */
-    public function getAvailableCurrencyCodes($skipBaseNotAllowed = false)
-    {
-        return $this->_storeManager->getStore()->getAvailableCurrencyCodes($skipBaseNotAllowed);
-    }
-
-    /**
-     * Get array of installed currencies for the scope
-     *
-     * @return array
-     */
-    public function getAllowedCurrencies()
-    {
-        return $this->_storeManager->getStore()->getAllowedCurrencies();
-    }
-
-    /**
-     * Get current currency rate
-     *
-     * @return float
-     */
-    public function getCurrentCurrencyRate()
-    {
-        return $this->_storeManager->getStore()->getCurrentCurrencyRate();
     }
 
     /**
@@ -185,32 +123,6 @@ class Button extends Template
 
     /**
      * @param $item
-     * @return null|string
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function getItemName($item)
-    {
-        if ($item->getHasChildren()) {
-            $product = $this->_productRepository->get($item->getSku());
-
-            return $product->getName();
-        } else {
-            return $item->getName();
-        }
-    }
-
-    /**
-     * @param $item
-     * @return null|string
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function getParentProductType($item)
-    {
-        return $this->_productRepository->get($item->getSku())->getTypeId();
-    }
-
-    /**
-     * @param $item
      * @return array
      */
     public function checkConfigurableProduct($item)
@@ -229,11 +141,42 @@ class Button extends Template
     }
 
     /**
+     * @param $price
+     * @return float
+     */
+    public function formatPrice($price)
+    {
+        return $this->priceCurrency->format($price, false);
+    }
+
+    /**
      * @return float
      */
     public function getBaseSubtotal()
     {
-        return $this->checkoutSession->getQuote()->getBaseSubtotal();
+        return $this->formatPrice($this->checkoutSession->getQuote()->getBaseSubtotal());
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return int
+     */
+    public function getItemsCount()
+    {
+        return $this->getQuote()->getItemsCount();
+    }
+
+    /**
+     * Get active quote
+     *
+     * @return Quote
+     */
+    public function getQuote()
+    {
+        if (null === $this->_quote) {
+            $this->_quote = $this->checkoutSession->getQuote();
+        }
+        return $this->_quote;
     }
 
     /**
