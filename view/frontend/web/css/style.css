@@ -17,7 +17,7 @@
  * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
-.actions .primary.sharecart{
+.actions .primary.sharecart {
     margin: 0 10px 15px;
 }
 
@@ -27,7 +27,7 @@ button.action.primary.sharecart {
     line-height: 2.2rem;
     padding: 14px 17px;
     font-size: 1.8rem;
-    margin:unset;
+    margin: unset;
 }
 
 .mp-sharecart-popup .modal-inner-wrap {
@@ -35,9 +35,9 @@ button.action.primary.sharecart {
 }
 
 .mp-popup-cart {
-    display:none;
+    display: none;
 }
 
-#mp_show_download_share{
-    display:inline-block;
+#mp_show_download_share {
+    display: inline-block;
 }

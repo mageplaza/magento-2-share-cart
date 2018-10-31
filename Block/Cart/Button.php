@@ -4,9 +4,9 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the mageplaza.com license that is
+ * This source file is subject to the Mageplaza.com license that is
  * available through the world-wide-web at this URL:
- * https://mageplaza.com/LICENSE.txt
+ * https://www.mageplaza.com/LICENSE.txt
  *
  * DISCLAIMER
  *
@@ -15,16 +15,31 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_ShareCart
- * @copyright   Copyright (c) 2018 Mageplaza (https://www.mageplaza.com/)
- * @license     http://mageplaza.com/LICENSE.txt
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
  */
+
 namespace Mageplaza\ShareCart\Block\Cart;
 
-use Magento\Customer\Model\Context;
-use \Magento\Quote\Api\CartRepositoryInterface;
-class Button extends \Magento\Framework\View\Element\Template
+use Magento\Catalog\Model\ProductRepository;
+use Magento\Checkout\Model\Session;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Magento\Directory\Model\Currency;
+use Magento\Framework\UrlInterface;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
+use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Store\Model\StoreManagerInterface;
+
+/**
+ * Class Button
+ * @package Mageplaza\ShareCart\Block\Cart
+ */
+class Button extends Template
 {
-    /** @var $cartepository */
+    /**
+     * @var CartRepositoryInterface
+     */
     protected $cartRepository;
 
     /**
@@ -33,60 +48,64 @@ class Button extends \Magento\Framework\View\Element\Template
     protected $checkoutSession;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var StoreManagerInterface
      */
     protected $_storeManager;
+
     /**
-     * @var \Magento\Directory\Model\Currency
+     * @var Currency
      */
     protected $_currency;
+
     /**
-     * @var \Magento\Catalog\Model\ProductRepository
+     * @var ProductRepository
      */
     protected $_productRepository;
 
     /**
-     * @var \Magento\ConfigurableProduct\Model\Product\Type\Configurable
+     * @var Configurable
      */
     protected $configurable;
 
     /**
-     * @var \Magento\Framework\UrlInterface
+     * @var UrlInterface
      */
     protected $_urlBuilder;
 
     /**
      * Button constructor.
-     * @param \Magento\Framework\View\Element\Template\Context $context
+     * @param Context $context
      * @param CartRepositoryInterface $cartRepository
-     * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Directory\Model\Currency $currency
-     * @param \Magento\Catalog\Model\ProductRepository $productRepository
-     * @param \Magento\ConfigurableProduct\Model\Product\Type\Configurable $configurable
-     * @param \Magento\Framework\UrlInterface $urlBuilder
+     * @param Session $checkoutSession
+     * @param StoreManagerInterface $storeManager
+     * @param Currency $currency
+     * @param ProductRepository $productRepository
+     * @param Configurable $configurable
+     * @param UrlInterface $urlBuilder
      * @param array $data
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
+        Context $context,
         CartRepositoryInterface $cartRepository,
-        \Magento\Checkout\Model\Session $checkoutSession,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Directory\Model\Currency $currency,
-        \Magento\Catalog\Model\ProductRepository $productRepository,
-        \Magento\ConfigurableProduct\Model\Product\Type\Configurable $configurable,
-        \Magento\Framework\UrlInterface $urlBuilder,
+        Session $checkoutSession,
+        StoreManagerInterface $storeManager,
+        Currency $currency,
+        ProductRepository $productRepository,
+        Configurable $configurable,
+        UrlInterface $urlBuilder,
         array $data = [])
     {
-        $this->_storeManager = $storeManager;
-        $this->_currency = $currency;
-        $this->cartRepository = $cartRepository;
-        $this->checkoutSession =$checkoutSession;
+        $this->_storeManager      = $storeManager;
+        $this->_currency          = $currency;
+        $this->cartRepository     = $cartRepository;
+        $this->checkoutSession    = $checkoutSession;
         $this->_productRepository = $productRepository;
-        $this->configurable  =$configurable;
-        $this->_urlBuilder = $urlBuilder;
+        $this->configurable       = $configurable;
+        $this->_urlBuilder        = $urlBuilder;
+
         parent::__construct($context, $data);
     }
+
     /**
      * Get store base currency code
      *
@@ -123,7 +142,6 @@ class Button extends \Magento\Framework\View\Element\Template
      */
     public function getAvailableCurrencyCodes($skipBaseNotAllowed = false)
     {
-
         return $this->_storeManager->getStore()->getAvailableCurrencyCodes($skipBaseNotAllowed);
     }
 
@@ -172,13 +190,13 @@ class Button extends \Magento\Framework\View\Element\Template
      */
     public function getItemName($item)
     {
-        if($item->getHasChildren()) {
+        if ($item->getHasChildren()) {
             $product = $this->_productRepository->get($item->getSku());
+
             return $product->getName();
-        }else{
+        } else {
             return $item->getName();
         }
-
     }
 
     /**
@@ -197,10 +215,7 @@ class Button extends \Magento\Framework\View\Element\Template
      */
     public function checkConfigurableProduct($item)
     {
-        return $product = $this->configurable->getParentIdsByChild($item->getProductId());
-        if(isset($product[0])){
-            return $product[0];
-        }
+        return $this->configurable->getParentIdsByChild($item->getProductId());
     }
 
     /**

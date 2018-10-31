@@ -3,7 +3,7 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the mageplaza.com license that is
+ * This source file is subject to the Mageplaza.com license that is
  * available through the world-wide-web at this URL:
  * https://www.mageplaza.com/LICENSE.txt
  *
@@ -20,10 +20,10 @@
 define([
     'uiComponent',
     'Magento_Customer/js/customer-data'
-], function (Component,customerData) {
+], function (Component, customerData) {
     'use strict';
 
-    var isReload =true;
+    var isReload = true;
     return Component.extend({
         defaults: {
             template: 'Mageplaza_ShareCart/minicart'
@@ -39,12 +39,11 @@ define([
             this.customer = customerData.get('cart');
         },
 
-
-        getQuoteId: function (){
+        getQuoteId: function () {
             return customerData.get('cart')().quote_url;
         },
 
-        copyQuote: function(){
+        copyQuote: function () {
             const quoteUrl = document.createElement('textarea');
             quoteUrl.value = customerData.get('cart')().quote_url;
             document.body.appendChild(quoteUrl);
@@ -53,7 +52,7 @@ define([
             document.body.removeChild(quoteUrl);
         },
 
-        isDisplay: function(){
+        isDisplay: function () {
             return customerData.get('cart')().summary_count;
         }
     });

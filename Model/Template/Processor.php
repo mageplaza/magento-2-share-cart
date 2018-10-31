@@ -6,7 +6,7 @@
  *
  * This source file is subject to the Mageplaza.com license that is
  * available through the world-wide-web at this URL:
- * https://mageplaza.com/LICENSE.txt
+ * https://www.mageplaza.com/LICENSE.txt
  *
  * DISCLAIMER
  *
@@ -15,8 +15,8 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_ShareCart
- * @copyright   Copyright (c) 2017-2018 Mageplaza (https://www.mageplaza.com/)
- * @license     http://mageplaza.com/LICENSE.txt
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\ShareCart\Model\Template;
@@ -96,8 +96,8 @@ class Processor extends Template
      */
     public function processTemplate()
     {
-        $store     = $this->variable['store'];
-        $this->storeId = $store->getId();
+        $store           = $this->variable['store'];
+        $this->storeId   = $store->getId();
         $isDesignApplied = $this->applyDesignConfig();
 
         $processor = $this->getTemplateFilter()
@@ -106,7 +106,7 @@ class Processor extends Template
             ->setIsChildTemplate($this->isChildTemplate())
             ->setTemplateProcessor([$this, 'getTemplateContent']);
 
-        $storeId   = $store->getId();
+        $storeId = $store->getId();
         $processor->setDesignParams($this->getDesignParams());
         $variables         = $this->addEmailVariables($this->variable, $storeId);
         $variables['this'] = $this;

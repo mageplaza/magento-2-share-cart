@@ -5,9 +5,9 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the mageplaza.com license that is
+ * This source file is subject to the Mageplaza.com license that is
  * available through the world-wide-web at this URL:
- * https://mageplaza.com/LICENSE.txt
+ * https://www.mageplaza.com/LICENSE.txt
  *
  * DISCLAIMER
  *
@@ -16,21 +16,26 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_ShareCart
- * @copyright   Copyright (c) 2018 Mageplaza (https://www.mageplaza.com/)
- * @license     http://mageplaza.com/LICENSE.txt
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\ShareCart\Controller\Index;
 
-
+use Magento\Checkout\Model\Session;
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Mpdf\Mpdf;
 use Magento\Store\Model\StoreManagerInterface;
-use Mageplaza\ShareCart\Model\Template\Processor;
 use Mageplaza\ShareCart\Helper\PrintProcess;
-use \Magento\Checkout\Model\Session;
+use Mageplaza\ShareCart\Model\Template\Processor;
+use Mpdf\Mpdf;
 
-class Download extends \Magento\Framework\App\Action\Action
+/**
+ * Class Download
+ * @package Mageplaza\ShareCart\Controller\Index
+ */
+class Download extends Action
 {
     /**
      * @var Processor
@@ -64,40 +69,44 @@ class Download extends \Magento\Framework\App\Action\Action
 
     /**
      * Download constructor.
-     * @param \Magento\Framework\App\Action\Context $context
+     * @param Context $context
      * @param Session $checkoutSession
      * @param StoreManagerInterface $storeManager
      * @param Processor $templateProcessor
      * @param PrintProcess $printProcess
      */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
+        Context $context,
         Session $checkoutSession,
         StoreManagerInterface $storeManager,
         Processor $templateProcessor,
-        PrintProcess  $printProcess)
+        PrintProcess $printProcess)
     {
-        $this->checkoutSession = $checkoutSession;
-        $this->storeManager  = $storeManager;
-        $this->templateProcessor    = $templateProcessor;
-        $this->printProcess = $printProcess;
+        $this->checkoutSession   = $checkoutSession;
+        $this->storeManager      = $storeManager;
+        $this->templateProcessor = $templateProcessor;
+        $this->printProcess      = $printProcess;
+
         return parent::__construct($context);
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|void
+     * @throws \Magento\Framework\Exception\FileSystemException
+     */
     public function execute()
     {
-            $html = $this->printProcess->readFile($this->printProcess->getBaseTemplatePath().'template.html');
-            $mpdf = new Mpdf();
+        $html = $this->printProcess->readFile($this->printProcess->getBaseTemplatePath() . 'template.html');
+        $mpdf = new Mpdf();
 
-            $storeId = $this->checkoutSession->getQuote()->getStoreId();
-            $processor = $this->templateProcessor->setVariable(
-                $this->printProcess->addCustomTemplateVars($storeId)
-            );
-            $processor->setTemplateHtml($html);
-            $processor->setStore($storeId);
-            $html = $processor->processTemplate();
-            $mpdf->WriteHTML($html);
-            $mpdf->Output('cart.pdf','D');
+        $storeId   = $this->checkoutSession->getQuote()->getStoreId();
+        $processor = $this->templateProcessor->setVariable(
+            $this->printProcess->addCustomTemplateVars($storeId)
+        );
+        $processor->setTemplateHtml($html);
+        $processor->setStore($storeId);
+        $html = $processor->processTemplate();
+        $mpdf->WriteHTML($html);
+        $mpdf->Output('cart.pdf', 'D');
     }
-
 }

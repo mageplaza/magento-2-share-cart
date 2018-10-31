@@ -19,7 +19,6 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
-
 ?>
 <table>
     <tr>
@@ -30,33 +29,33 @@
         <th class="th5"><?= __("Total") ?></th>
     </tr>
     <?php foreach ($block->getItems() as $item): ?>
-    <?php if($item->getProductType() == 'configurable'):?>
-    <tr>
-        <td><?php echo $item->getQty()?></td>
-        <td><?php echo $item->getSku()?></td>
-        <td><?php echo $block->getNameConfigurable($item) ?></td>
-        <td><?php echo $block->getCurrentCurrencySymbol().$item->getBasePriceInclTax() ?></td>
-        <td class="td5 mark"><?php echo $block->getCurrentCurrencySymbol().$item->getBaseRowTotalInclTax() ?></td>
-    </tr>
-        <?php endif;?>
-        <?php if($item->getParentItemId() && $block->checkConfigurableProduct($item)):?>
+        <?php if ($item->getProductType() == 'configurable'): ?>
+            <tr>
+                <td><?php echo $item->getQty() ?></td>
+                <td><?php echo $item->getSku() ?></td>
+                <td><?php echo $block->getNameConfigurable($item) ?></td>
+                <td><?php echo $block->getCurrentCurrencySymbol() . $item->getBasePriceInclTax() ?></td>
+                <td class="td5 mark"><?php echo $block->getCurrentCurrencySymbol() . $item->getBaseRowTotalInclTax() ?></td>
+            </tr>
+        <?php endif; ?>
+        <?php if ($item->getParentItemId() && $block->checkConfigurableProduct($item)): ?>
             <?php continue ?>
         <?php endif; ?>
-    <?php if($item->getProductType() != 'configurable'):?>
+        <?php if ($item->getProductType() != 'configurable'): ?>
             <tr>
-                <td><?php echo $item->getQty()?></td>
-                <td><?php echo $item->getSku()?></td>
+                <td><?php echo $item->getQty() ?></td>
+                <td><?php echo $item->getSku() ?></td>
                 <td><?php echo $item->getName() ?></td>
-                <td><?php echo $block->getCurrentCurrencySymbol().$item->getBasePriceInclTax() ?></td>
-                <td class="td5 mark"><?php echo $block->getCurrentCurrencySymbol().$item->getBaseRowTotalInclTax() ?></td>
+                <td><?php echo $block->getCurrentCurrencySymbol() . $item->getBasePriceInclTax() ?></td>
+                <td class="td5 mark"><?php echo $block->getCurrentCurrencySymbol() . $item->getBaseRowTotalInclTax() ?></td>
             </tr>
-        <?php endif;?>
+        <?php endif; ?>
     <?php endforeach ?>
     <tr class="tr1">
         <td class="td1"></td>
         <td class="td2"></td>
         <td class="td3"></td>
         <td class="td4"></td>
-        <td class="td5 mark" ><?php echo $block->getCurrentCurrencySymbol().$block->getBaseSubtotal() ?></td>
+        <td class="td5 mark"><?php echo $block->getCurrentCurrencySymbol() . $block->getBaseSubtotal() ?></td>
     </tr>
 </table>

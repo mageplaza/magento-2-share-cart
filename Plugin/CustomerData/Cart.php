@@ -21,8 +21,10 @@
 
 namespace Mageplaza\ShareCart\Plugin\CustomerData;
 
+use Magento\Checkout\Model\Session;
+use Magento\Framework\UrlInterface;
 use Mageplaza\Core\Helper\AbstractData;
-use Magento\Customer\Model\Session;
+
 /**
  * Class Cart
  * @package Mageplaza\RewardPoints\Plugin\CustomerData
@@ -38,28 +40,34 @@ class Cart
      * @var \Magento\Quote\Model\Quote|null
      */
     protected $quoteId = null;
+
     /**
      * @var \Mageplaza\Core\Helper\AbstractData
      */
     protected $helperData;
+
     /**
      * Url Builder
      *
-     * @var \Magento\Framework\UrlInterface
+     * @var UrlInterface
      */
     protected $_urlBuilder;
 
     /**
      * Cart constructor.
      * @param AbstractData $helperData
-     * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Magento\Framework\UrlInterface $urlBuilder
+     * @param Session $checkoutSession
+     * @param UrlInterface $urlBuilder
      */
-    public function __construct(AbstractData $helperData, \Magento\Checkout\Model\Session $checkoutSession, \Magento\Framework\UrlInterface $urlBuilder)
+    public function __construct(
+        AbstractData $helperData,
+        Session $checkoutSession,
+        UrlInterface $urlBuilder
+    )
     {
-        $this->checkoutSession =$checkoutSession;
-        $this->helperData = $helperData;
-        $this->_urlBuilder = $urlBuilder;
+        $this->checkoutSession = $checkoutSession;
+        $this->helperData      = $helperData;
+        $this->_urlBuilder     = $urlBuilder;
     }
 
     /**
@@ -74,7 +82,8 @@ class Cart
         if (null === $this->quoteId) {
             $this->quoteId = $this->checkoutSession->getQuoteId();
         }
-        $result['quote_url'] = $this->_urlBuilder->getUrl('sharecart/index/index',['quote_id'=> base64_encode($this->quoteId)]);
+        $result['quote_url'] = $this->_urlBuilder->getUrl('sharecart/index/index', ['quote_id' => base64_encode($this->quoteId)]);
+
         return $result;
     }
 }

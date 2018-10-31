@@ -15,39 +15,44 @@
  *
  * @category   Mageplaza
  * @package    Mageplaza_PdfInvoice
- * @copyright   Copyright (c) 2017-2018 Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\ShareCart\Helper;
 
+use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\State;
 use Magento\Framework\Filesystem;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Store\Model\StoreManagerInterface;
-use Mageplaza\Core\Helper\AbstractData;
-use Magento\Checkout\Model\Session;
-use Mageplaza\ShareCart\Helper\Data;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Framework\Stdlib\DateTime\TimeZone;
+use Magento\Store\Model\StoreManagerInterface;
+use Mageplaza\Core\Helper\AbstractData;
+
 /**
  * Class PrintProcess
  * @package Mageplaza\PdfInvoice\Helper
  */
 class PrintProcess extends AbstractData
 {
+    /**
+     * Save pdf file location
+     */
     const MAGEPLAZA_DIR = 'var/mageplaza';
 
+    /**
+     * @var DateTime
+     */
     protected $dateTime;
 
     /**
      * @var DirectoryList
      */
     protected $directoryList;
-
 
     /**
      * @var HelperData
@@ -58,7 +63,6 @@ class PrintProcess extends AbstractData
      * @var \Magento\Framework\Filesystem
      */
     protected $fileSystem;
-
 
     /**
      * @var $templateVars
@@ -81,14 +85,22 @@ class PrintProcess extends AbstractData
     protected $timezone;
 
     /**
+     * @var Session
+     */
+    protected $checkoutSession;
+
+    /**
      * PrintProcess constructor.
      * @param Context $context
-     * @param Order $order
      * @param State $state
      * @param Filesystem $fileSystem
      * @param DirectoryList $directoryList
      * @param StoreManagerInterface $storeManager
      * @param ObjectManagerInterface $objectManager
+     * @param Session $checkoutSession
+     * @param Data $helper
+     * @param DateTime $dateTime
+     * @param TimeZone $timezone
      */
     public function __construct(
         Context $context,
@@ -104,15 +116,15 @@ class PrintProcess extends AbstractData
     )
     {
         $this->checkoutSession = $checkoutSession;
-        $this->state                = $state;
-        $this->fileSystem           = $fileSystem;
-        $this->directoryList        = $directoryList;
-        $this->helper=$helper;
-        $this->dateTime= $dateTime;
-        $this->timezone = $timezone;
+        $this->state           = $state;
+        $this->fileSystem      = $fileSystem;
+        $this->directoryList   = $directoryList;
+        $this->helper          = $helper;
+        $this->dateTime        = $dateTime;
+        $this->timezone        = $timezone;
+
         parent::__construct($context, $objectManager, $storeManager);
     }
-
 
     /**
      * @param $relativePath
@@ -122,6 +134,7 @@ class PrintProcess extends AbstractData
     public function readFile($relativePath)
     {
         $rootDirectory = $this->fileSystem->getDirectoryRead(DirectoryList::ROOT);
+
         return $rootDirectory->readFile($relativePath);
     }
 
@@ -139,23 +152,23 @@ class PrintProcess extends AbstractData
         return $storeId;
     }
 
-
     /**
      * @param $storeId
      * @return mixed
      */
     public function addCustomTemplateVars($storeId)
     {
-        $templateVars['quote'] = $this->checkoutSession->getQuote();
-        $templateVars['store']= $this->checkoutSession->getQuote()->getStore();
+        $templateVars['quote']      = $this->checkoutSession->getQuote();
+        $templateVars['store']      = $this->checkoutSession->getQuote()->getStore();
         $templateVars['vat_number'] = $this->helper->getVATNumber($storeId);
-        $templateVars['phone'] = $this->helper->getPhone($storeId);
-        $templateVars['contact'] = $this->helper->getEmail($storeId);
+        $templateVars['phone']      = $this->helper->getPhone($storeId);
+        $templateVars['contact']    = $this->helper->getEmail($storeId);
         $templateVars['registered'] = $this->helper->getRegisteredNumber($storeId);
-        $templateVars['company']   =$this->helper->getCompanyName($storeId);
-        $templateVars['address']  = $this->helper->getAddress($storeId);
-        $templateVars['message']  = $this->helper->getWarningMessage($storeId);
-        $templateVars['timezone']=  $this->formatDate($this->dateTime->gmtDate());
+        $templateVars['company']    = $this->helper->getCompanyName($storeId);
+        $templateVars['address']    = $this->helper->getAddress($storeId);
+        $templateVars['message']    = $this->helper->getWarningMessage($storeId);
+        $templateVars['timezone']   = $this->formatDate($this->dateTime->gmtDate());
+
         return $templateVars;
     }
 
@@ -181,7 +194,6 @@ class PrintProcess extends AbstractData
             return $dateTime;
         }
     }
-
 
     /**
      * Get base template path
@@ -209,6 +221,7 @@ class PrintProcess extends AbstractData
         for ($i = count($rootPathArr); $i < count($currentDirArr) - 1; $i++) {
             $basePath .= $currentDirArr[$i] . '/';
         }
+
         return $basePath . 'view/base/templates/';
     }
 }

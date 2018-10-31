@@ -29,8 +29,8 @@ use Mageplaza\Core\Helper\AbstractData;
  */
 class Data extends AbstractData
 {
-    const CONFIG_MODULE_PATH                 = 'sharecart';
-    const BUSINESS_INFORMATION_CONFIGURATION = 'sharecart/general/business_information';
+    const CONFIG_MODULE_PATH   = 'sharecart';
+    const BUSINESS_CONFIG_PATH = 'business_information';
 
     /**
      * @return bool
@@ -44,62 +44,62 @@ class Data extends AbstractData
      * @param null $storeId
      * @return array|mixed
      */
-    public function getCompanyName($storeId =null)
+    public function getCompanyName($storeId = null)
     {
-       return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/company',$storeId);
+        return $this->getModuleConfig(self::BUSINESS_CONFIG_PATH . '/company', $storeId);
     }
 
     /**
      * @param null $storeId
      * @return array|mixed
      */
-    public function getAddress($storeId =null)
+    public function getAddress($storeId = null)
     {
-        return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/address',$storeId);
+        return $this->getModuleConfig(self::BUSINESS_CONFIG_PATH . '/address', $storeId);
     }
 
     /**
      * @param null $storeId
      * @return array|mixed
      */
-    public function getVATNumber($storeId =null)
+    public function getVATNumber($storeId = null)
     {
-        return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/vat_number',$storeId);
+        return $this->getModuleConfig(self::BUSINESS_CONFIG_PATH . '/vat_number', $storeId);
     }
 
     /**
      * @param null $storeId
      * @return array|mixed
      */
-    public function getPhone($storeId =null)
+    public function getPhone($storeId = null)
     {
-        return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/phone',$storeId);
+        return $this->getModuleConfig(self::BUSINESS_CONFIG_PATH . '/phone', $storeId);
     }
 
     /**
      * @param null $storeId
      * @return array|mixed
      */
-    public function getEmail($storeId =null)
+    public function getEmail($storeId = null)
     {
-        return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/contact',$storeId);
+        return $this->getModuleConfig(self::BUSINESS_CONFIG_PATH . '/contact', $storeId);
     }
 
     /**
      * @param null $storeId
      * @return array|mixed
      */
-    public function getRegisteredNumber($storeId =null)
+    public function getRegisteredNumber($storeId = null)
     {
-       return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/registered',$storeId);
+        return $this->getModuleConfig(self::BUSINESS_CONFIG_PATH . '/registered', $storeId);
     }
 
     /**
      * @param null $storeId
      * @return array|mixed
      */
-    public function getWarningMessage($storeId=null)
+    public function getWarningMessage($storeId = null)
     {
-        return $this->getConfigValue(self::BUSINESS_INFORMATION_CONFIGURATION.'/message',$storeId);
+        return $this->getModuleConfig(self::BUSINESS_CONFIG_PATH . '/message', $storeId);
     }
 }

@@ -5,9 +5,9 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the mageplaza.com license that is
+ * This source file is subject to the Mageplaza.com license that is
  * available through the world-wide-web at this URL:
- * https://mageplaza.com/LICENSE.txt
+ * https://www.mageplaza.com/LICENSE.txt
  *
  * DISCLAIMER
  *
@@ -16,72 +16,101 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_ShareCart
- * @copyright   Copyright (c) 2018 Mageplaza (https://www.mageplaza.com/)
- * @license     http://mageplaza.com/LICENSE.txt
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
 namespace Mageplaza\ShareCart\Controller\Index;
+
+use Magento\Catalog\Model\ProductRepository;
+use Magento\Checkout\Model\Cart;
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\View\Result\PageFactory;
 use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\ShareCart\Helper\Data;
 
-class Index extends \Magento\Framework\App\Action\Action
+/**
+ * Class Index
+ * @package Mageplaza\ShareCart\Controller\Index
+ */
+class Index extends Action
 {
     /**
-     * @var \Magento\Catalog\Model\ProductRepository
+     * @var ProductRepository
      */
     protected $_productRepository;
 
-    /** @var $cartepository */
+    /**
+     * @var CartRepositoryInterface
+     */
     protected $cartRepository;
 
     /**
-     * @var \Magento\Framework\View\Result\PageFactory
+     * @var PageFactory
      */
     protected $_pageFactory;
 
     /**
-     * @var \Magento\Checkout\Model\Cart
+     * @var Cart
      */
     protected $cart;
 
-    /** @var \Magento\Store\Model\StoreManagerInterface  */
+    /**
+     * @var StoreManagerInterface
+     */
     protected $_storeManager;
+
+    /**
+     * @var Data
+     */
     protected $helper;
+
     /**
      * Index constructor.
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Magento\Framework\View\Result\PageFactory $pageFactory
+     * @param Context $context
+     * @param PageFactory $pageFactory
      * @param CartRepositoryInterface $cartRepository
-     * @param \Magento\Checkout\Model\Cart $cart
-     * @param \Magento\Catalog\Model\ProductRepository $productRepository
+     * @param Cart $cart
+     * @param ProductRepository $productRepository
+     * @param StoreManagerInterface $storeManager
+     * @param Data $helper
      */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
-        \Magento\Framework\View\Result\PageFactory $pageFactory,
+        Context $context,
+        PageFactory $pageFactory,
         CartRepositoryInterface $cartRepository,
-        \Magento\Checkout\Model\Cart $cart,
-        \Magento\Catalog\Model\ProductRepository $productRepository,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        Data $helper)
+        Cart $cart,
+        ProductRepository $productRepository,
+        StoreManagerInterface $storeManager,
+        Data $helper
+    )
     {
-        $this->_pageFactory = $pageFactory;
-        $this->cartRepository = $cartRepository;
-        $this->cart = $cart;
+        $this->_pageFactory       = $pageFactory;
+        $this->cartRepository     = $cartRepository;
+        $this->cart               = $cart;
         $this->_productRepository = $productRepository;
-        $this->_storeManager = $storeManager;
-        $this->helper=$helper;
+        $this->_storeManager      = $storeManager;
+        $this->helper             = $helper;
+
         return parent::__construct($context);
     }
 
+    /**
+     * @return $this|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function execute()
     {
         /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
-        if($this->helper->isEnabled()) {
+        if ($this->helper->isEnabled()) {
             $quoteId = base64_decode($this->getRequest()->getParam('quote_id'), true);
-            if($quoteId) {
+            if ($quoteId) {
                 $quote = $this->cartRepository->get($quoteId);
-
 
                 $items = $quote->getItemsCollection();
                 foreach ($items as $item) {
@@ -93,9 +122,9 @@ class Index extends \Magento\Framework\App\Action\Action
                              * with the same id may have different sets of order attributes.
                              */
                             $product = $this->_productRepository->getById($item->getProductId(), false, $storeId, true);
-                            if($product) {
+                            if ($product) {
                                 $options = $item->getProduct()->getTypeInstance(true)->getOrderOptions($item->getProduct());
-                                $info = $options['info_buyRequest'];
+                                $info    = $options['info_buyRequest'];
                                 if ($item->getProductType() == 'configurable' || $item->getProductType() == 'bundle') {
                                     $this->cart->addProduct($product, $info);
                                 } else {
@@ -106,12 +135,11 @@ class Index extends \Magento\Framework\App\Action\Action
                             return $this;
                         }
                     }
-
                 }
                 $this->cart->save();
             }
         }
+
         return $resultRedirect->setPath('checkout/cart');
     }
-
 }

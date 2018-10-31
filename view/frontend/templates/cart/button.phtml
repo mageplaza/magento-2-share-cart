@@ -15,85 +15,85 @@
  *
  * @category    Mageplaza
  * @package     Mageplaza_ShareCart
- * @copyright   Copyright (c) 2017-2018 Mageplaza (http://www.mageplaza.com/)
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 ?>
 
-<?php if($this->helper('Mageplaza\ShareCart\Helper\Data')->isEnabled()):?>
-<div id="mp_show_download_share">
-<button data-bind="click:function(){}"
-        name="action_show_cart"
-        title="<?= $block->escapeHtml(__('Text')) ?>"
-        class="action show cart">
-    <span><?= /* @escapeNotVerified */ __('Text') ?></span>
-</button>
+<?php if ($this->helper('Mageplaza\ShareCart\Helper\Data')->isEnabled()): ?>
+    <div id="mp_show_download_share">
+        <button data-bind="click:function(){}"
+                name="action_show_cart"
+                title="<?= $block->escapeHtml(__('Text')) ?>"
+                class="action show cart">
+            <span><?= __('Text') ?></span>
+        </button>
 
-<button data-bind="click:function(){}"
-        name="action_download_pdf"
-        title="<?= $block->escapeHtml(__('PDF')) ?>"
-        class="download cart"
-        onclick="location.href='<?php echo $block->getLinkDownload() ?>'"
->
-    <span><?= /* @escapeNotVerified */ __('PDF') ?></span>
-</button>
+        <button data-bind="click:function(){}"
+                name="action_download_pdf"
+                title="<?= $block->escapeHtml(__('PDF')) ?>"
+                class="download cart"
+                onclick="location.href='<?php echo $block->getLinkDownload() ?>'"
+        >
+            <span><?= __('PDF') ?></span>
+        </button>
 
-<button data-bind="click:function(){}"
-        name="action_sharecart_link"
-        class="action_sharecart_link"
-        title="<?= $block->escapeHtml(__('Cart Link')) ?>"
-        class="download cart">
-    <span><?= /* @escapeNotVerified */ __('Cart Link') ?></span>
-</button>
-    <div id="popup-cart" class="mp-popup-cart">
-        <h2><?php echo __('Shopping Cart')?></h2>
-        <hr>
-        <?php foreach ($block->getItems() as $item): ?>
-            <?php if($item->getProductType() == 'configurable'):?>
-                <?php echo $item->getQty().'X'.$block->getNameConfigurable($item).'-'.$item->getBasePriceInclTax().$block->getCurrentCurrencySymbol() ?>
-            <?php endif;?>
+        <button data-bind="click:function(){}"
+                name="action_sharecart_link"
+                class="action_sharecart_link"
+                title="<?= $block->escapeHtml(__('Cart Link')) ?>"
+                class="download cart">
+            <span><?= __('Cart Link') ?></span>
+        </button>
+        <div id="popup-cart" class="mp-popup-cart">
+            <h2><?php echo __('Shopping Cart') ?></h2>
+            <hr>
+            <?php foreach ($block->getItems() as $item): ?>
+                <?php if ($item->getProductType() == 'configurable'): ?>
+                    <?php echo $item->getQty() . 'X' . $block->getNameConfigurable($item) . '-' . $item->getBasePriceInclTax() . $block->getCurrentCurrencySymbol() ?>
+                <?php endif; ?>
 
-            <?php if($item->getParentItemId() && $block->checkConfigurableProduct($item)):?>
-                <?php continue ?>
-            <?php endif; ?>
-            <?php if($item->getProductType() != 'configurable'):?>
-                <?php echo $item->getQty().'X'.$item->getName().'-'.$item->getBasePriceInclTax().$block->getCurrentCurrencySymbol() ?>
-            <?php endif;?>
-        <br>
-        <?php endforeach ?>
-        <hr>
-        <h2><?php echo __('Total').':'.$block->getBaseSubtotal().$block->getCurrentCurrencySymbol()?></h2>
+                <?php if ($item->getParentItemId() && $block->checkConfigurableProduct($item)): ?>
+                    <?php continue ?>
+                <?php endif; ?>
+                <?php if ($item->getProductType() != 'configurable'): ?>
+                    <?php echo $item->getQty() . 'X' . $item->getName() . '-' . $item->getBasePriceInclTax() . $block->getCurrentCurrencySymbol() ?>
+                <?php endif; ?>
+                <br>
+            <?php endforeach ?>
+            <hr>
+            <h2><?php echo __('Total') . ':' . $block->getBaseSubtotal() . $block->getCurrentCurrencySymbol() ?></h2>
+        </div>
     </div>
-</div>
 
-<script type="text/javascript">
-    require(
-            ['jquery','Magento_Ui/js/modal/modal'],
-            function ($,modal) {
+    <script type="text/javascript">
+        require(
+            ['jquery', 'Magento_Ui/js/modal/modal'],
+            function ($, modal) {
                 $('.cart.main.actions').append($('#mp_show_download_share'));
                 var options;
                 options = {
                     'type': 'popup',
-                    'clickableOverlay':true,
+                    'clickableOverlay': true,
                     'responsive': true,
                     'innerScroll': true,
-                    'modalClass':'mp-sharecart-popup',
-                    'opened': function() {
+                    'modalClass': 'mp-sharecart-popup',
+                    'opened': function () {
                         $(".modal-footer").hide();
                     }
                 };
 
                 modal(options, $('#popup-cart'));
 
-                $(".action.show.cart").on('click',function(){
+                $(".action.show.cart").on('click', function () {
                     $("#popup-cart").modal("openModal");
                 });
 
-                $(".action_sharecart_link").on('click',function () {
+                $(".action_sharecart_link").on('click', function () {
                     $('.action.primary.sharecart').click();
                 });
 
-        }
-    );
-</script>
-<?php endif;?>
+            }
+        );
+    </script>
+<?php endif; ?>
