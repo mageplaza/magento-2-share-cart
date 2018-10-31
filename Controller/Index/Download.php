@@ -74,11 +74,12 @@ class Download extends Action
     /**
      * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|void
      * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws \Mpdf\MpdfException
      */
     public function execute()
     {
         $html = $this->printProcess->readFile($this->printProcess->getBaseTemplatePath() . 'template.html');
-        $mpdf = new Mpdf();
+        $mpdf = new Mpdf(['tempDir' => BP . '/var/tmp']);
 
         $storeId   = $this->checkoutSession->getQuote()->getStoreId();
         $processor = $this->templateProcessor->setVariable(
