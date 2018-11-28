@@ -40,27 +40,10 @@
         width: 100%;
     }
 
-    table tr th,
-    table tr td {
+    table, th, td {
         border: 1px solid black;
     }
-
-    table tr:first-child {
-        border-bottom: 2px solid black;
-    }
-
-    table tr th {
-        border-top: none;
-    }
-
-    table tr th:nth-child(1) {
-        border-left: none;
-    }
-
-    table tr th:last-child {
-        border-right: none;
-    }
-
+    
     td.qty {
         text-align: center;
     }
@@ -82,30 +65,17 @@
         text-align: right;
     }
 
-    table tr th:nth-child(5),
-    table tr td:nth-child(5) {
-        border-left: 2px solid black;
-    }
-
     table tr:last-child td:not(:nth-child(5)) {
         border: none;
     }
 
-    table tr.tr1 td.td1,
-    table tr.tr1 td.td2,
-    table tr.tr1 td.td3,
-    table tr.tr1 td.td4 {
-        border: none;
+    table tr.tr1 td.td1
+    {
+        font-weight: bold;
+        text-align: center;
     }
 
-    table tr td.td5,
-    table tr th.th5 {
-        border-right: none;
-    }
-
-    table tr:last-child td:nth-child(5) {
-        border-bottom: 2px solid black;
-    }
+    tr {background-color: #FFEBCD;}
 
     .mark {
         font-weight: 600;
