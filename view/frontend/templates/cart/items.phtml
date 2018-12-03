@@ -1,0 +1,58 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_ShareCart
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+?>
+<table>
+    <tr>
+        <th><?= __("Quantity") ?></th>
+        <th><?= __("Stock ID") ?></th>
+        <th><?= __("Description") ?></th>
+        <th><?= __("Price") ?></th>
+        <th class="th5"><?= __("Total") ?></th>
+    </tr>
+    <?php foreach ($block->getItems() as $item): ?>
+        <?php if ($item->getProductType() == 'configurable'): ?>
+            <tr>
+                <td><?php echo $item->getQty() ?></td>
+                <td><?php echo $item->getSku() ?></td>
+                <td><?php echo $block->getNameConfigurable($item) ?></td>
+                <td><?php echo $block->formatPrice($item->getBasePriceInclTax()) ?></td>
+                <td class="td5 mark"><?php echo $block->formatPrice($item->getBaseRowTotalInclTax()) ?></td>
+            </tr>
+        <?php endif; ?>
+        <?php if ($item->getParentItemId() && $block->checkConfigurableProduct($item)): ?>
+            <?php continue ?>
+        <?php endif; ?>
+        <?php if ($item->getProductType() != 'configurable'): ?>
+            <tr>
+                <td><?php echo $item->getQty() ?></td>
+                <td><?php echo $item->getSku() ?></td>
+                <td><?php echo $item->getName() ?></td>
+                <td><?php echo $block->formatPrice($item->getBasePriceInclTax()) ?></td>
+                <td class="td5 mark"><?php echo $block->formatPrice($item->getBaseRowTotalInclTax()) ?></td>
+            </tr>
+        <?php endif; ?>
+    <?php endforeach ?>
+    <tr class="tr1">
+        <td class="td1" colspan="4"><?= __("Cart Total") ?></td>
+        <td class="td5 mark"><?php echo $block->getBaseSubtotal() ?></td>
+    </tr>
+</table>

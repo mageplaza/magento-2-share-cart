@@ -1,0 +1,124 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_ShareCart
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+?>
+
+<?php if ($this->helper('Mageplaza\ShareCart\Helper\Data')->isEnabled() && $block->getItemsCount()): ?>
+    <script data-role="mp_show_download_share-tmpl" type="text/x-magento-template">
+        <button data-bind="click:function(){}"
+                name="action_show_cart"
+                title="<?= $block->escapeHtml(__('Text')) ?>"
+                class="action show cart">
+            <span><?= __('Text') ?></span>
+        </button>
+        <button data-bind="click:function(){}"
+                name="action_download_pdf"
+                title="<?= $block->escapeHtml(__('PDF')) ?>"
+                class="download cart"
+                onclick="location.href='<?php echo $block->getLinkDownload() ?>'"
+        >
+            <span><?= __('PDF') ?></span>
+        </button>
+        <button data-bind="click:function(){}"
+                name="action_sharecart_link"
+                class="action_sharecart_link"
+                title="<?= $block->escapeHtml(__('Share Cart')) ?>"
+                class="download cart">
+            <span><?= __('Share Cart') ?></span>
+        </button>
+    </script>
+    <script data-role="mp_show_popup-tmpl" type="text/x-magento-template">
+        <div id="popup-cart" class="mp-popup-cart">
+            <?php foreach ($block->getItems() as $item): ?>
+                <?php if ($item->getProductType() == 'configurable'): ?>
+                    <?php echo $item->getQty() . ' x ' . $block->getNameConfigurable($item) . ' - ' . $block->formatPrice($item->getBasePriceInclTax()) ?>
+                <?php endif; ?>
+                <?php if ($item->getParentItemId() && $block->checkConfigurableProduct($item)): ?>
+                    <?php continue ?>
+                <?php endif; ?>
+                <?php if ($item->getProductType() != 'configurable'): ?>
+                    <?php echo $item->getQty() . ' x ' . $item->getName() . ' - ' . $block->formatPrice($item->getBasePriceInclTax()) ?>
+                <?php endif; ?>
+                <br>
+            <?php endforeach ?>
+            <hr>
+            <h2><span style="font-weight: 500"><?php echo __('Total: ') ?></span><?= $block->getBaseSubtotal() ?></h2>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        require(
+            ['jquery', 'Magento_Ui/js/modal/modal', 'Magento_Customer/js/customer-data', 'mage/template'],
+            function ($, modal, customerData, mageTemplate) {
+                var template = $('[data-role=mp_show_download_share-tmpl]'),
+                    popuptmpl = $('[data-role=mp_show_popup-tmpl]');
+
+                if (template.length) {
+                    $('.cart.main.actions').prepend(template.html().trim());
+                }
+                if (popuptmpl.length) {
+                    // this.dialogContainerTmpl = mageTemplate(popuptmpl.html().trim());
+                    var $dialog = $(popuptmpl.html().trim());
+                    $dialog.modal({
+                        'type': 'popup',
+                        title: $.mage.__('Shopping Cart'),
+                        buttons: [],
+                        'modalClass': 'mp-sharecart-popup',
+                        'responsive': true,
+                        'innerScroll': true,
+
+                        /** @inheritdoc */
+                        opened: function () {
+                            $dialog.trigger('open');
+                            $(".modal-footer").hide();
+                        },
+
+                        /** @inheritdoc */
+                        closed: function () {
+                            $dialog.trigger('close');
+                        }
+                    });
+
+                    $(".action.show.cart").on('click', function () {
+                        $dialog.modal("openModal");
+                    });
+                }
+
+                var buttonShareCart = $(".action_sharecart_link");
+                buttonShareCart.on('click', function (e) {
+                    const quoteUrl = document.createElement('textarea');
+                    quoteUrl.value = customerData.get('cart')().quote_url;
+                    document.body.appendChild(quoteUrl);
+                    quoteUrl.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(quoteUrl);
+
+                    e.currentTarget.setAttribute('class', 'mp-tooltipped');
+                    e.currentTarget.setAttribute('aria-label', '<?php echo __('Copied!') ?>');
+                });
+
+                buttonShareCart.on('mouseleave', function(e){
+                    e.currentTarget.removeAttribute('class');
+                    e.currentTarget.removeAttribute('aria-label');
+                });
+            }
+        );
+    </script>
+<?php endif; ?>
