@@ -1,6 +1,6 @@
 # Magento 2 Share Cart extension
 
-[Mageplaza Magento 2 Share Cart Extension](https://www.mageplaza.com/magento-2-share-cart/) helps customers in sharing their shopping cart with friends and family as well. This is a supportive method to promote store’s conversion rate via the existing users, and this can significantly contribute to the revenue of the store.
+[Mageplaza Share Cart Extension](https://www.mageplaza.com/magento-2-share-cart/) helps customers in sharing their shopping cart with friends and family as well. This is a supportive method to promote store’s conversion rate via the existing users, and this can significantly contribute to the revenue of the store.
 
 - Share shopping cart quickly 
 - Shortly review purchasing cart
@@ -45,6 +45,7 @@ A: **Text** button only displays chosen items while **PDF** button offers more i
 - Install via composer (recommend)
 
 Run the following command in Magento 2 root folder:
+
 ```
 composer require mageplaza/module-share-cart
 php bin/magento setup:upgrade
@@ -110,21 +111,21 @@ The module is properly responsive with both mobile and desktop devices.
 
 ## 7. How to configure Share Cart in Magento 2
 
-### 7.1 Backend
+### 7.1 Configuration
 
 - Access to your Magento 2 Admin Panel, navigate to `Store tab > Open Settings > Configuration `
 - Click `Mageplaza Extensions > Share Cart > Configuration`, go to `General Configuration` section.
 
 ![Imgur](https://i.imgur.com/CwdqEgU.png)
 
-#### General
+#### 7.1.1. General
 
 - **Enable**: Choose `Yes` to enable the Module. If the module is turned on, all the features work well. Otherwise, all the options in admin panel and the module will not show. 
 - **Enable**: Select `Yes` to enable the extension
 - **File Name**: Insert name for PDF file. The PDF file will display the customer’s order information
 - **Add Timestamp suffix**: Click `Yes` option to display the current time to upload PDF document
  
-#### Business Information
+#### 7.1.2. Business Information
 
 - **Company Name**: Insert your company name in this field
 - **Address**: Fill the company’s location
