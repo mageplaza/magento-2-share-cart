@@ -91,7 +91,8 @@ class Button extends Template
         Configurable $configurable,
         UrlInterface $urlBuilder,
         PriceCurrencyInterface $priceCurrency,
-        array $data = [])
+        array $data = []
+    )
     {
         $this->_currency          = $currency;
         $this->checkoutSession    = $checkoutSession;
@@ -176,6 +177,7 @@ class Button extends Template
         if (null === $this->_quote) {
             $this->_quote = $this->checkoutSession->getQuote();
         }
+
         return $this->_quote;
     }
 

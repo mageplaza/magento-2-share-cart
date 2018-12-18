@@ -27,8 +27,6 @@ use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Directory\Model\Currency;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Class Items
@@ -71,7 +69,8 @@ class Items extends Template
         Currency $currency,
         ProductRepository $productRepository,
         Configurable $configurable,
-        array $data = [])
+        array $data = []
+    )
     {
         $this->_currency          = $currency;
         $this->checkoutSession    = $checkoutSession;

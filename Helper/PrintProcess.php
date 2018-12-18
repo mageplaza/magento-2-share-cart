@@ -133,6 +133,7 @@ class PrintProcess extends Data
     /**
      * @param $storeId
      * @return mixed
+     * @throws \Exception
      */
     public function addCustomTemplateVars($storeId)
     {
@@ -153,6 +154,7 @@ class PrintProcess extends Data
     /**
      * @param $date
      * @return string
+     * @throws \Exception
      */
     public function formatDate($date)
     {

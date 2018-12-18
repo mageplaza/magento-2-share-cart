@@ -1,1 +1,27 @@
-Enabled,Enabled
+Text,Text
+PDF,PDF
+"Share Cart","Share Cart"
+"Total: ","Total: "
+Copied!,Copied!
+Quantity,Quantity
+"Stock ID","Stock ID"
+Description,Description
+Price,Price
+Total,Total
+"Cart Total","Cart Total"
+"Publisher of this Price List:","Publisher of this Price List:"
+"Pricelist made ","Pricelist made "
+"Shopping Cart","Shopping Cart"
+"General Configuration","General Configuration"
+Enable,Enable
+"Select <strong>Yes</strong> to enable the module.","Select <strong>Yes</strong> to enable the module."
+"File Name","File Name"
+"Add Timestamp suffix","Add Timestamp suffix"
+"Business Information","Business Information"
+"Company Name","Company Name"
+Address,Address
+"VAT Number","VAT Number"
+Phone,Phone
+Email,Email
+"Registered Number","Registered Number"
+"Warning Message","Warning Message"

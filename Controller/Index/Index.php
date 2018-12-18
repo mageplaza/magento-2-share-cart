@@ -27,7 +27,6 @@ use Magento\Checkout\Model\Cart;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\View\Result\PageFactory;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\ShareCart\Helper\Data;
@@ -66,7 +65,6 @@ class Index extends Action
     /**
      * Index constructor.
      * @param Context $context
-     * @param PageFactory $pageFactory
      * @param CartRepositoryInterface $cartRepository
      * @param Cart $cart
      * @param ProductRepository $productRepository
@@ -75,7 +73,6 @@ class Index extends Action
      */
     public function __construct(
         Context $context,
-        PageFactory $pageFactory,
         CartRepositoryInterface $cartRepository,
         Cart $cart,
         ProductRepository $productRepository,
