@@ -4,7 +4,10 @@
 
 - Share shopping cart quickly 
 - Shortly review purchasing cart
-- Download the PDF file with full information  
+- Download the PDF file with full information
+
+[![Latest Stable Version](https://poser.pugx.org/mageplaza/module-share-cart/v/stable)](https://packagist.org/packages/mageplaza/module-share-cart)
+[![Total Downloads](https://poser.pugx.org/mageplaza/module-share-cart/downloads)](https://packagist.org/packages/mageplaza/module-share-cart)
 
 ## 1. Documentation
 
