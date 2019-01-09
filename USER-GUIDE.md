@@ -3,7 +3,7 @@
 - Product Page: https://www.mageplaza.com/magento-2-share-cart/
 - Get Support: https://github.com/mageplaza/magento-2-share-cart/issues
 - Contribute on Github: https://github.com/mageplaza/magento-2-share-cart
-- Changelog: https://www.mageplaza.com/changelog/m2-share-cart.txt
+- Changelog: https://www.mageplaza.com/releases/share-cart
 
 ## 2. How to install
 
