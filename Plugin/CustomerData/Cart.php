@@ -22,8 +22,9 @@
 namespace Mageplaza\ShareCart\Plugin\CustomerData;
 
 use Magento\Checkout\Model\Session;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\UrlInterface;
-use Mageplaza\Core\Helper\AbstractData;
 
 /**
  * Class Cart
@@ -37,16 +38,6 @@ class Cart
     protected $checkoutSession;
 
     /**
-     * @var \Magento\Quote\Model\Quote|null
-     */
-    protected $quoteId = null;
-
-    /**
-     * @var \Mageplaza\Core\Helper\AbstractData
-     */
-    protected $helperData;
-
-    /**
      * Url Builder
      *
      * @var UrlInterface
@@ -55,34 +46,30 @@ class Cart
 
     /**
      * Cart constructor.
-     * @param AbstractData $helperData
+     *
      * @param Session $checkoutSession
      * @param UrlInterface $urlBuilder
      */
     public function __construct(
-        AbstractData $helperData,
         Session $checkoutSession,
         UrlInterface $urlBuilder
-    )
-    {
+    ) {
         $this->checkoutSession = $checkoutSession;
-        $this->helperData      = $helperData;
         $this->_urlBuilder     = $urlBuilder;
     }
 
     /**
-     * Add Url data to result
-     *
      * @param \Magento\Checkout\CustomerData\Cart $subject
      * @param $result
+     *
      * @return mixed
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function afterGetSectionData(\Magento\Checkout\CustomerData\Cart $subject, $result)
     {
-        if (null === $this->quoteId) {
-            $this->quoteId = $this->checkoutSession->getQuoteId();
-        }
-        $result['quote_url'] = $this->_urlBuilder->getUrl('sharecart', ['key' => base64_encode($this->quoteId)]);
+        $result['quote_url'] = $this->_urlBuilder->getUrl('sharecart',
+            ['key' => $this->checkoutSession->getQuote()->getMpShareCartToken()]);
 
         return $result;
     }

@@ -26,10 +26,13 @@ use Magento\Catalog\Model\ProductRepository;
 use Magento\Checkout\Model\Cart;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Redirect;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\ShareCart\Helper\Data;
+use Mageplaza\ShareCart\Api\ShareCartRepositoryInterface;
 
 /**
  * Class Index
@@ -61,15 +64,21 @@ class Index extends Action
      * @var Data
      */
     protected $helper;
+    /**
+     * @var ShareCartRepositoryInterface
+     */
+    private $shareCartRepository;
 
     /**
      * Index constructor.
+     *
      * @param Context $context
      * @param CartRepositoryInterface $cartRepository
      * @param Cart $cart
      * @param ProductRepository $productRepository
      * @param StoreManagerInterface $storeManager
      * @param Data $helper
+     * @param ShareCartRepositoryInterface $shareCartRepository
      */
     public function __construct(
         Context $context,
@@ -77,58 +86,29 @@ class Index extends Action
         Cart $cart,
         ProductRepository $productRepository,
         StoreManagerInterface $storeManager,
-        Data $helper
-    )
-    {
-        $this->cartRepository     = $cartRepository;
-        $this->cart               = $cart;
-        $this->_productRepository = $productRepository;
-        $this->_storeManager      = $storeManager;
-        $this->helper             = $helper;
+        Data $helper,
+        ShareCartRepositoryInterface $shareCartRepository
+    ) {
+        $this->cartRepository      = $cartRepository;
+        $this->cart                = $cart;
+        $this->_productRepository  = $productRepository;
+        $this->_storeManager       = $storeManager;
+        $this->helper              = $helper;
+        $this->shareCartRepository = $shareCartRepository;
 
-        return parent::__construct($context);
+        parent::__construct($context);
     }
 
     /**
-     * @return $this|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return ResponseInterface|Redirect|ResultInterface
      */
     public function execute()
     {
-        /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
+        /** @var Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
         if ($this->helper->isEnabled()) {
-            $quoteId = base64_decode($this->getRequest()->getParam('key'), true);
-            if ($quoteId) {
-                $quote = $this->cartRepository->get($quoteId);
-
-                $items = $quote->getItemsCollection();
-                foreach ($items as $item) {
-                    if (!$item->getParentItemId()) {
-                        $storeId = $this->_storeManager->getStore()->getId();
-                        try {
-                            /**
-                             * We need to reload product in this place, because products
-                             * with the same id may have different sets of order attributes.
-                             */
-                            $product = $this->_productRepository->getById($item->getProductId(), false, $storeId, true);
-                            if ($product) {
-                                $options = $item->getProduct()->getTypeInstance(true)->getOrderOptions($item->getProduct());
-                                $info    = $options['info_buyRequest'];
-                                if ($item->getProductType() == 'configurable' || $item->getProductType() == 'bundle') {
-                                    $this->cart->addProduct($product, $info);
-                                } else {
-                                    $this->cart->addProduct($item->getProduct(), $item->getQty());
-                                }
-                            }
-                        } catch (NoSuchEntityException $e) {
-                            return $this;
-                        }
-                    }
-                }
-                $this->cart->save();
-            }
+            $mpShareCartToken = $this->getRequest()->getParam('key');
+            $this->shareCartRepository->share($mpShareCartToken);
         }
 
         return $resultRedirect->setPath('checkout/cart');

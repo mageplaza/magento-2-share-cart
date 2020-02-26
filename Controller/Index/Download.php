@@ -25,9 +25,13 @@ namespace Mageplaza\ShareCart\Controller\Index;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Mageplaza\ShareCart\Helper\PrintProcess;
-use Mageplaza\ShareCart\Model\Template\Processor;
-use Mpdf\Mpdf;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Mageplaza\ShareCart\Api\ShareCartRepositoryInterface;
+use Mpdf\MpdfException;
 
 /**
  * Class Download
@@ -36,59 +40,43 @@ use Mpdf\Mpdf;
 class Download extends Action
 {
     /**
-     * @var Processor
+     * @var ShareCartRepositoryInterface
      */
-    protected $templateProcessor;
-
+    protected $printProcess;
     /**
-     * @var \Magento\Checkout\Model\Session
+     * @var Session
      */
     protected $checkoutSession;
 
     /**
-     * @var PrintProcess
-     */
-    protected $printProcess;
-
-    /**
      * Download constructor.
+     *
      * @param Context $context
+     * @param ShareCartRepositoryInterface $printProcess
      * @param Session $checkoutSession
-     * @param Processor $templateProcessor
-     * @param PrintProcess $printProcess
      */
     public function __construct(
         Context $context,
-        Session $checkoutSession,
-        Processor $templateProcessor,
-        PrintProcess $printProcess
-    )
-    {
-        $this->checkoutSession   = $checkoutSession;
-        $this->templateProcessor = $templateProcessor;
-        $this->printProcess      = $printProcess;
+        ShareCartRepositoryInterface $printProcess,
+        Session $checkoutSession
+    ) {
+        $this->printProcess    = $printProcess;
+        $this->checkoutSession = $checkoutSession;
 
-        return parent::__construct($context);
+        parent::__construct($context);
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|void
-     * @throws \Magento\Framework\Exception\FileSystemException
-     * @throws \Mpdf\MpdfException
+     * @return ResponseInterface|ResultInterface|void
+     * @throws FileSystemException
+     * @throws LocalizedException
+     * @throws MpdfException
+     * @throws NoSuchEntityException
      */
     public function execute()
     {
-        $html = $this->printProcess->readFile($this->printProcess->getBaseTemplatePath() . 'template.html');
-        $mpdf = new Mpdf(['tempDir' => BP . '/var/tmp']);
+        $mpShareCartToken = $this->checkoutSession->getQuote()->getMpShareCartToken();
 
-        $storeId   = $this->checkoutSession->getQuote()->getStoreId();
-        $processor = $this->templateProcessor->setVariable(
-            $this->printProcess->addCustomTemplateVars($storeId)
-        );
-        $processor->setTemplateHtml($html);
-        $processor->setStore($storeId);
-        $html = $processor->processTemplate();
-        $mpdf->WriteHTML($html);
-        $mpdf->Output($this->printProcess->getFileName(), 'D');
+        $this->printProcess->downloadPdf($mpShareCartToken);
     }
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="1.0"?>
 <!--
 /**
  * Mageplaza
@@ -15,16 +15,13 @@
  * version in the future.
  *
  * @category    Mageplaza
- * @package     Mageplaza_ShareCart
+ * @package     Mageplaza_StoreCredit
  * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Mageplaza_ShareCart" setup_version="1.0.1">
-        <sequence>
-            <module name="Mageplaza_Core"/>
-            <module name="Magento_Checkout"/>
-        </sequence>
-    </module>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
+    <extension_attributes for="Magento\Quote\Api\Data\CartInterface">
+        <attribute code="mp_share_cart_token" type="string"/>
+    </extension_attributes>
 </config>

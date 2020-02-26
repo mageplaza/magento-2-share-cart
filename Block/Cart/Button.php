@@ -25,8 +25,8 @@ use Magento\Catalog\Model\ProductRepository;
 use Magento\Checkout\Model\Session;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Directory\Model\Currency;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
-use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Quote\Model\Quote;
@@ -58,11 +58,6 @@ class Button extends Template
     protected $configurable;
 
     /**
-     * @var UrlInterface
-     */
-    protected $_urlBuilder;
-
-    /**
      * @var PriceCurrencyInterface
      */
     protected $priceCurrency;
@@ -70,16 +65,16 @@ class Button extends Template
     /**
      * @var Quote
      */
-    protected $_quote;
+    protected $quote;
 
     /**
      * Button constructor.
+     *
      * @param Context $context
      * @param Session $checkoutSession
      * @param Currency $currency
      * @param ProductRepository $productRepository
      * @param Configurable $configurable
-     * @param UrlInterface $urlBuilder
      * @param PriceCurrencyInterface $priceCurrency
      * @param array $data
      */
@@ -89,16 +84,13 @@ class Button extends Template
         Currency $currency,
         ProductRepository $productRepository,
         Configurable $configurable,
-        UrlInterface $urlBuilder,
         PriceCurrencyInterface $priceCurrency,
         array $data = []
-    )
-    {
+    ) {
         $this->_currency          = $currency;
         $this->checkoutSession    = $checkoutSession;
         $this->_productRepository = $productRepository;
         $this->configurable       = $configurable;
-        $this->_urlBuilder        = $urlBuilder;
         $this->priceCurrency      = $priceCurrency;
 
         parent::__construct($context, $data);
@@ -115,15 +107,18 @@ class Button extends Template
     }
 
     /**
-     * @return \Magento\Eav\Model\Entity\Collection\AbstractCollection
+     * @param Quote $quote
+     *
+     * @return mixed
      */
-    public function getItems()
+    public function getItems($quote)
     {
-        return $this->checkoutSession->getQuote()->getItemsCollection();
+        return $quote->getItemsCollection();
     }
 
     /**
      * @param $item
+     *
      * @return array
      */
     public function checkConfigurableProduct($item)
@@ -133,16 +128,22 @@ class Button extends Template
 
     /**
      * @param $item
+     *
      * @return null|string
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function getNameConfigurable($item)
     {
-        return $this->_productRepository->get($item->getSku())->getName();
+        if ($product = $this->_productRepository->get($item->getSku())) {
+            return $product->getName();
+        }
+
+        return null;
     }
 
     /**
      * @param $price
+     *
      * @return float
      */
     public function formatPrice($price)
@@ -151,34 +152,13 @@ class Button extends Template
     }
 
     /**
+     * @param Quote $quote
+     *
      * @return float
      */
-    public function getBaseSubtotal()
+    public function getBaseSubtotal($quote)
     {
-        return $this->formatPrice($this->checkoutSession->getQuote()->getBaseSubtotal());
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return int
-     */
-    public function getItemsCount()
-    {
-        return $this->getQuote()->getItemsCount();
-    }
-
-    /**
-     * Get active quote
-     *
-     * @return Quote
-     */
-    public function getQuote()
-    {
-        if (null === $this->_quote) {
-            $this->_quote = $this->checkoutSession->getQuote();
-        }
-
-        return $this->_quote;
+        return $this->formatPrice($quote->getBaseSubtotal());
     }
 
     /**
