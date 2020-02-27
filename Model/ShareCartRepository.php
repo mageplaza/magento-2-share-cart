@@ -110,7 +110,8 @@ class ShareCartRepository implements ShareCartRepositoryInterface
                          */
                         $product = $this->productRepository->getById($item->getProductId(), false, $storeId, true);
                         if ($product) {
-                            $options     = $item->getProduct()->getTypeInstance(true)->getOrderOptions($item->getProduct());
+                            $options     = $item->getProduct()->getTypeInstance(true)
+                                ->getOrderOptions($item->getProduct());
                             $info        = $options['info_buyRequest'];
                             $productType = $item->getProductType();
                             if ($productType === 'configurable' || $productType === 'bundle') {

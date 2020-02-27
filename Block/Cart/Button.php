@@ -25,6 +25,7 @@ use Magento\Catalog\Model\ProductRepository;
 use Magento\Checkout\Model\Session;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Directory\Model\Currency;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Framework\View\Element\Template;
@@ -107,12 +108,16 @@ class Button extends Template
     }
 
     /**
-     * @param Quote $quote
+     * @param Quote|null $quote
      *
-     * @return mixed
+     * @return \Magento\Eav\Model\Entity\Collection\AbstractCollection
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
-    public function getItems($quote)
+    public function getItems($quote = null)
     {
+        $quote = $quote ?: $this->checkoutSession->getQuote();
+
         return $quote->getItemsCollection();
     }
 
@@ -152,13 +157,27 @@ class Button extends Template
     }
 
     /**
-     * @param Quote $quote
+     * @param Quote|null $quote
      *
      * @return float
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
-    public function getBaseSubtotal($quote)
+    public function getBaseSubtotal($quote = null)
     {
+        $quote = $quote ?: $this->checkoutSession->getQuote();
+
         return $this->formatPrice($quote->getBaseSubtotal());
+    }
+
+    /**
+     * @return int|mixed|null
+     * @throws NoSuchEntityException
+     * @throws LocalizedException
+     */
+    public function getItemsCount()
+    {
+        return $this->checkoutSession->getQuote()->getItemsCount();
     }
 
     /**
