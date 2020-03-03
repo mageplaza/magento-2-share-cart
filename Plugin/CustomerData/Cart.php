@@ -68,8 +68,10 @@ class Cart
      */
     public function afterGetSectionData(\Magento\Checkout\CustomerData\Cart $subject, $result)
     {
-        $result['quote_url'] = $this->_urlBuilder->getUrl('sharecart',
-            ['key' => $this->checkoutSession->getQuote()->getMpShareCartToken()]);
+        $result['quote_url'] = $this->_urlBuilder->getUrl(
+            'sharecart',
+            ['key' => $this->checkoutSession->getQuote()->getMpShareCartToken()]
+        );
 
         return $result;
     }

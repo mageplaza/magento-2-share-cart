@@ -25,12 +25,15 @@ use Magento\Catalog\Model\ProductRepository;
 use Magento\Checkout\Model\Session;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Directory\Model\Currency;
+use Magento\Eav\Model\Entity\Collection\AbstractCollection;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\Quote\Item;
+use Mageplaza\ShareCart\Helper\Data;
 
 /**
  * Class Button
@@ -69,6 +72,11 @@ class Button extends Template
     protected $quote;
 
     /**
+     * @var Data
+     */
+    protected $helper;
+
+    /**
      * Button constructor.
      *
      * @param Context $context
@@ -77,6 +85,7 @@ class Button extends Template
      * @param ProductRepository $productRepository
      * @param Configurable $configurable
      * @param PriceCurrencyInterface $priceCurrency
+     * @param Data $helper
      * @param array $data
      */
     public function __construct(
@@ -86,6 +95,7 @@ class Button extends Template
         ProductRepository $productRepository,
         Configurable $configurable,
         PriceCurrencyInterface $priceCurrency,
+        Data $helper,
         array $data = []
     ) {
         $this->_currency          = $currency;
@@ -93,6 +103,7 @@ class Button extends Template
         $this->_productRepository = $productRepository;
         $this->configurable       = $configurable;
         $this->priceCurrency      = $priceCurrency;
+        $this->helper             = $helper;
 
         parent::__construct($context, $data);
     }
@@ -110,19 +121,23 @@ class Button extends Template
     /**
      * @param Quote|null $quote
      *
-     * @return \Magento\Eav\Model\Entity\Collection\AbstractCollection
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
+     * @return AbstractCollection
      */
     public function getItems($quote = null)
     {
-        $quote = $quote ?: $this->checkoutSession->getQuote();
+        try {
+            $quote = $quote ?: $this->checkoutSession->getQuote();
+        } catch (NoSuchEntityException $e) {
+            return null;
+        } catch (LocalizedException $e) {
+            return null;
+        }
 
         return $quote->getItemsCollection();
     }
 
     /**
-     * @param $item
+     * @param Item $item
      *
      * @return array
      */
@@ -132,22 +147,25 @@ class Button extends Template
     }
 
     /**
-     * @param $item
+     * @param Item $item
      *
      * @return null|string
-     * @throws NoSuchEntityException
      */
     public function getNameConfigurable($item)
     {
-        if ($product = $this->_productRepository->get($item->getSku())) {
-            return $product->getName();
+        try {
+            if ($product = $this->_productRepository->get($item->getSku())) {
+                return $product->getName();
+            }
+        } catch (NoSuchEntityException $e) {
+            return null;
         }
 
         return null;
     }
 
     /**
-     * @param $price
+     * @param float $price
      *
      * @return float
      */
@@ -157,27 +175,43 @@ class Button extends Template
     }
 
     /**
-     * @param Quote|null $quote
+     * @param null $quote
      *
-     * @return float
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
+     * @return float|null
      */
     public function getBaseSubtotal($quote = null)
     {
-        $quote = $quote ?: $this->checkoutSession->getQuote();
+        $quote = $this->getQuote($quote);
 
-        return $this->formatPrice($quote->getBaseSubtotal());
+        return $quote ? $this->formatPrice($quote->getBaseSubtotal()) : null;
+    }
+
+    /**
+     * @param Quote|null $quote
+     *
+     * @return Quote|null
+     */
+    public function getQuote($quote = null)
+    {
+        try {
+            $quote = $quote ?: $this->checkoutSession->getQuote();
+        } catch (NoSuchEntityException $e) {
+            return null;
+        } catch (LocalizedException $e) {
+            return null;
+        }
+
+        return $quote;
     }
 
     /**
      * @return int|mixed|null
-     * @throws NoSuchEntityException
-     * @throws LocalizedException
      */
     public function getItemsCount()
     {
-        return $this->checkoutSession->getQuote()->getItemsCount();
+        $quote = $this->getQuote();
+
+        return $quote ? $quote->getItemsCount() : null;
     }
 
     /**
@@ -186,5 +220,13 @@ class Button extends Template
     public function getLinkDownload()
     {
         return $this->_urlBuilder->getUrl('sharecart/index/download');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnable()
+    {
+        return $this->helper->isEnabled();
     }
 }

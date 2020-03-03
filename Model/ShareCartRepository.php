@@ -22,6 +22,7 @@
 namespace Mageplaza\ShareCart\Model;
 
 use Magento\Catalog\Model\ProductRepository;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
@@ -108,20 +109,18 @@ class ShareCartRepository implements ShareCartRepositoryInterface
                          * We need to reload product in this place, because products
                          * with the same id may have different sets of order attributes.
                          */
-                        $product = $this->productRepository->getById($item->getProductId(), false, $storeId, true);
-                        if ($product) {
-                            $options     = $item->getProduct()->getTypeInstance(true)
-                                ->getOrderOptions($item->getProduct());
-                            $info        = $options['info_buyRequest'];
-                            $productType = $item->getProductType();
-                            if ($productType === 'configurable' || $productType === 'bundle') {
-                                $this->cart->addProduct($product, $info);
-                            } else {
-                                $this->cart->addProduct($item->getProduct(), $item->getQty());
-                            }
+                        $product     = $this->productRepository->getById($item->getProductId(), false, $storeId, true);
+                        $options     = $item->getProduct()->getTypeInstance(true)
+                            ->getOrderOptions($item->getProduct());
+                        $info        = $options['info_buyRequest'];
+                        $productType = $item->getProductType();
+                        if ($productType === 'configurable' || $productType === 'bundle') {
+                            $this->cart->addProduct($product, $info);
+                        } else {
+                            $this->cart->addProduct($item->getProduct(), $item->getQty());
                         }
                     } catch (NoSuchEntityException $e) {
-                        return $this;
+                        throw new LocalizedException(__('Can not add product to cart'));
                     }
                 }
             }
@@ -130,7 +129,7 @@ class ShareCartRepository implements ShareCartRepositoryInterface
             return $this->cartRepository->get($this->cart->getQuote()->getId());
         }
 
-        return false;
+        throw new LocalizedException(__('The Cart is not available'));
     }
 
     /**

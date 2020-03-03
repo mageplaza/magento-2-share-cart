@@ -22,15 +22,12 @@
 
 namespace Mageplaza\ShareCart\Controller\Index;
 
-use Magento\Catalog\Model\ProductRepository;
-use Magento\Checkout\Model\Cart;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
-use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Mageplaza\ShareCart\Helper\Data;
 use Mageplaza\ShareCart\Api\ShareCartRepositoryInterface;
 
@@ -40,26 +37,6 @@ use Mageplaza\ShareCart\Api\ShareCartRepositoryInterface;
  */
 class Index extends Action
 {
-    /**
-     * @var ProductRepository
-     */
-    protected $_productRepository;
-
-    /**
-     * @var CartRepositoryInterface
-     */
-    protected $cartRepository;
-
-    /**
-     * @var Cart
-     */
-    protected $cart;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    protected $_storeManager;
-
     /**
      * @var Data
      */
@@ -73,26 +50,14 @@ class Index extends Action
      * Index constructor.
      *
      * @param Context $context
-     * @param CartRepositoryInterface $cartRepository
-     * @param Cart $cart
-     * @param ProductRepository $productRepository
-     * @param StoreManagerInterface $storeManager
      * @param Data $helper
      * @param ShareCartRepositoryInterface $shareCartRepository
      */
     public function __construct(
         Context $context,
-        CartRepositoryInterface $cartRepository,
-        Cart $cart,
-        ProductRepository $productRepository,
-        StoreManagerInterface $storeManager,
         Data $helper,
         ShareCartRepositoryInterface $shareCartRepository
     ) {
-        $this->cartRepository      = $cartRepository;
-        $this->cart                = $cart;
-        $this->_productRepository  = $productRepository;
-        $this->_storeManager       = $storeManager;
         $this->helper              = $helper;
         $this->shareCartRepository = $shareCartRepository;
 
@@ -108,7 +73,11 @@ class Index extends Action
         $resultRedirect = $this->resultRedirectFactory->create();
         if ($this->helper->isEnabled()) {
             $mpShareCartToken = $this->getRequest()->getParam('key');
-            $this->shareCartRepository->share($mpShareCartToken);
+            try {
+                $this->shareCartRepository->share($mpShareCartToken);
+            } catch (LocalizedException $e) {
+                $this->messageManager->addErrorMessage($e->getMessage());
+            }
         }
 
         return $resultRedirect->setPath('checkout/cart');

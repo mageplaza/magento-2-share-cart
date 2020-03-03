@@ -33,6 +33,7 @@ interface ShareCartRepositoryInterface
      * @param string|null $mpShareCartToken
      *
      * @return \Magento\Quote\Api\Data\CartInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function share($mpShareCartToken);
 

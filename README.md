@@ -79,7 +79,7 @@ This little simple button supports customers in taking a clear overview of chose
 **PDF** button is another extra button with the function to download. When the customer hits this button, a PDF file will be downloaded and stored automatically in the user's current device. In comparison to the **Text** button with quick view function, **PDF**'s function allows the customer to get detail information such as:
 - Information of store: Company Name, Address, Email, Phone, VAT Information, Registered Number, and Warning Message
 - Date of the purchase
-- Purchase summary: Quantity, Price, Total, Stock ID, Descriptio
+- Purchase summary: Quantity, Price, Total, Stock ID, Description
 
 ![Imgur](https://i.imgur.com/mLNOyd8.png)
 
