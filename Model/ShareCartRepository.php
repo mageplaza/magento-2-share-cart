@@ -99,7 +99,8 @@ class ShareCartRepository implements ShareCartRepositoryInterface
     public function share($mpShareCartToken)
     {
         /** @var Quote $quote */
-        if ($quote = $this->quoteFactory->create()->load($mpShareCartToken, 'mp_share_cart_token')) {
+        $quote = $this->quoteFactory->create()->load($mpShareCartToken, 'mp_share_cart_token');
+        if ($quote->getId()) {
             $items = $quote->getItemsCollection();
             foreach ($items as $item) {
                 if (!$item->getParentItemId()) {
