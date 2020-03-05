@@ -25,10 +25,4 @@
     <type name="Magento\Quote\Api\CartRepositoryInterface">
         <plugin name="mp_share_cart" type="Mageplaza\ShareCart\Plugin\Api\CartGet"/>
     </type>
-    <type name="Magento\Quote\Api\CartManagementInterface">
-        <plugin name="mp_share_cart" type="Mageplaza\ShareCart\Plugin\Api\CartManagementGetCustomer"/>
-    </type>
-    <type name="Magento\Quote\Api\GuestCartRepositoryInterface">
-        <plugin name="mp_share_cart" type="Mageplaza\ShareCart\Plugin\Api\GuestCartGet"/>
-    </type>
 </config>

@@ -64,6 +64,27 @@ class CartGet
      */
     public function afterGet(CartRepositoryInterface $cartRepository, CartInterface $cart)
     {
+        return $this->setTokenToExtensionAttributes($cart);
+    }
+
+    /**
+     * @param CartRepositoryInterface $cartRepository
+     * @param CartInterface $cart
+     *
+     * @return CartInterface
+     */
+    public function afterGetActiveForCustomer(CartRepositoryInterface $cartRepository, CartInterface $cart)
+    {
+        return $this->setTokenToExtensionAttributes($cart);
+    }
+
+    /**
+     * @param CartInterface $cart
+     *
+     * @return CartInterface
+     */
+    public function setTokenToExtensionAttributes(CartInterface $cart)
+    {
         $cartExtension = $cart->getExtensionAttributes();
         if ($cartExtension && $cartExtension->getMpShareCartToken()) {
             return $cart;
