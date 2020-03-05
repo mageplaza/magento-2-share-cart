@@ -28,7 +28,6 @@ use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Mageplaza\ShareCart\Helper\Data;
 use Mageplaza\ShareCart\Api\ShareCartRepositoryInterface;
 
 /**
@@ -38,10 +37,6 @@ use Mageplaza\ShareCart\Api\ShareCartRepositoryInterface;
 class Index extends Action
 {
     /**
-     * @var Data
-     */
-    protected $helper;
-    /**
      * @var ShareCartRepositoryInterface
      */
     private $shareCartRepository;
@@ -50,15 +45,12 @@ class Index extends Action
      * Index constructor.
      *
      * @param Context $context
-     * @param Data $helper
      * @param ShareCartRepositoryInterface $shareCartRepository
      */
     public function __construct(
         Context $context,
-        Data $helper,
         ShareCartRepositoryInterface $shareCartRepository
     ) {
-        $this->helper              = $helper;
         $this->shareCartRepository = $shareCartRepository;
 
         parent::__construct($context);
@@ -70,14 +62,12 @@ class Index extends Action
     public function execute()
     {
         /** @var Redirect $resultRedirect */
-        $resultRedirect = $this->resultRedirectFactory->create();
-        if ($this->helper->isEnabled()) {
-            $mpShareCartToken = $this->getRequest()->getParam('key');
-            try {
-                $this->shareCartRepository->share($mpShareCartToken);
-            } catch (LocalizedException $e) {
-                $this->messageManager->addErrorMessage($e->getMessage());
-            }
+        $resultRedirect   = $this->resultRedirectFactory->create();
+        $mpShareCartToken = $this->getRequest()->getParam('key');
+        try {
+            $this->shareCartRepository->share($mpShareCartToken);
+        } catch (LocalizedException $e) {
+            $this->messageManager->addErrorMessage($e->getMessage());
         }
 
         return $resultRedirect->setPath('checkout/cart');

@@ -22,7 +22,6 @@
 namespace Mageplaza\ShareCart\Helper;
 
 use Exception;
-use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\FileSystemException;
@@ -30,7 +29,6 @@ use Magento\Framework\Filesystem;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Framework\Stdlib\DateTime\TimeZone;
-use Magento\Quote\Model\QuoteFactory;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\ShareCart\Model\Template\Processor;
 use Mpdf\Mpdf;
@@ -74,19 +72,9 @@ class PrintProcess extends Data
     protected $timezone;
 
     /**
-     * @var Session
-     */
-    protected $checkoutSession;
-
-    /**
      * @var Processor
      */
     protected $templateProcessor;
-
-    /**
-     * @var QuoteFactory
-     */
-    protected $quoteFactory;
 
     /**
      * PrintProcess constructor.
@@ -96,12 +84,10 @@ class PrintProcess extends Data
      * @param DirectoryList $directoryList
      * @param StoreManagerInterface $storeManager
      * @param ObjectManagerInterface $objectManager
-     * @param Session $checkoutSession
      * @param Data $helper
      * @param DateTime $dateTime
      * @param TimeZone $timezone
      * @param Processor $templateProcessor
-     * @param QuoteFactory $quoteFactory
      */
     public function __construct(
         Context $context,
@@ -109,21 +95,17 @@ class PrintProcess extends Data
         DirectoryList $directoryList,
         StoreManagerInterface $storeManager,
         ObjectManagerInterface $objectManager,
-        Session $checkoutSession,
         Data $helper,
         DateTime $dateTime,
         TimeZone $timezone,
-        Processor $templateProcessor,
-        QuoteFactory $quoteFactory
+        Processor $templateProcessor
     ) {
-        $this->checkoutSession   = $checkoutSession;
         $this->fileSystem        = $fileSystem;
         $this->directoryList     = $directoryList;
         $this->helper            = $helper;
         $this->dateTime          = $dateTime;
         $this->timezone          = $timezone;
         $this->templateProcessor = $templateProcessor;
-        $this->quoteFactory      = $quoteFactory;
 
         parent::__construct($context, $objectManager, $storeManager);
     }
@@ -225,7 +207,7 @@ class PrintProcess extends Data
             $rootPathArr = explode('\\', $rootPath);
         }
 
-        $basePath = '';
+        $basePath           = '';
         $rootPathArrCount   = count($rootPathArr);
         $currentDirArrCount = count($currentDirArr);
         for ($i = $rootPathArrCount; $i < $currentDirArrCount - 1; $i++) {
@@ -236,26 +218,24 @@ class PrintProcess extends Data
     }
 
     /**
-     * @param string $mpShareCartToken
+     * @param Quote $quote
      *
      * @throws FileSystemException
      * @throws MpdfException
      * @throws Exception
      */
-    public function downloadPdf($mpShareCartToken)
+    public function downloadPdf($quote)
     {
-        if ($quote = $this->quoteFactory->create()->load($mpShareCartToken, 'mp_share_cart_token')) {
-            $html = $this->readFile($this->getBaseTemplatePath() . 'template.html');
-            $mpdf = new Mpdf(['tempDir' => BP . '/var/tmp']);
+        $html = $this->readFile($this->getBaseTemplatePath() . 'template.html');
+        $mpdf = new Mpdf(['tempDir' => BP . '/var/tmp']);
 
-            $processor = $this->templateProcessor->setVariable(
-                $this->addCustomTemplateVars($quote)
-            );
-            $processor->setTemplateHtml($html);
-            $processor->setStore($quote->getStoreId());
-            $html = $processor->processTemplate();
-            $mpdf->WriteHTML($html);
-            $mpdf->Output($this->getFileName(), 'D');
-        }
+        $processor = $this->templateProcessor->setVariable(
+            $this->addCustomTemplateVars($quote)
+        );
+        $processor->setTemplateHtml($html);
+        $processor->setStore($quote->getStoreId());
+        $html = $processor->processTemplate();
+        $mpdf->WriteHTML($html);
+        $mpdf->Output($this->getFileName(), 'D');
     }
 }

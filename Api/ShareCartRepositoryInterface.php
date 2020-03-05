@@ -39,7 +39,7 @@ interface ShareCartRepositoryInterface
 
     /**
      * @param string $token
-     * @return \Mageplaza\ShareCart\Api\Data\ErrorResponseInterface|string
+     * @return string
      * @throws \Magento\Framework\Exception\FileSystemException
      * @throws \Mpdf\MpdfException
      * @throws \Exception

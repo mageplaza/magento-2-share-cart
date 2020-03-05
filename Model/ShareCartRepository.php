@@ -30,6 +30,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\ShareCart\Api\ShareCartRepositoryInterface;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Checkout\Model\Cart;
+use Mageplaza\ShareCart\Helper\Data;
 use Mageplaza\ShareCart\Helper\PrintProcess;
 
 /**
@@ -68,6 +69,11 @@ class ShareCartRepository implements ShareCartRepositoryInterface
     protected $printProcess;
 
     /**
+     * @var Data
+     */
+    protected $helper;
+
+    /**
      * ShareCartRepository constructor.
      *
      * @param QuoteFactory $quoteFactory
@@ -76,6 +82,7 @@ class ShareCartRepository implements ShareCartRepositoryInterface
      * @param Cart $cart
      * @param CartRepositoryInterface $cartRepository
      * @param PrintProcess $printProcess
+     * @param Data $helper
      */
     public function __construct(
         QuoteFactory $quoteFactory,
@@ -83,7 +90,8 @@ class ShareCartRepository implements ShareCartRepositoryInterface
         ProductRepository $productRepository,
         Cart $cart,
         CartRepositoryInterface $cartRepository,
-        PrintProcess $printProcess
+        PrintProcess $printProcess,
+        Data $helper
     ) {
         $this->quoteFactory      = $quoteFactory;
         $this->storeManager      = $storeManager;
@@ -91,6 +99,7 @@ class ShareCartRepository implements ShareCartRepositoryInterface
         $this->cart              = $cart;
         $this->cartRepository    = $cartRepository;
         $this->printProcess      = $printProcess;
+        $this->helper            = $helper;
     }
 
     /**
@@ -99,38 +108,34 @@ class ShareCartRepository implements ShareCartRepositoryInterface
     public function share($mpShareCartToken)
     {
         /** @var Quote $quote */
-        $quote = $this->quoteFactory->create()->load($mpShareCartToken, 'mp_share_cart_token');
-        if ($quote->getId()) {
-            $items = $quote->getItemsCollection();
-            foreach ($items as $item) {
-                if (!$item->getParentItemId()) {
-                    $storeId = $quote->getStoreId();
-                    try {
-                        /**
-                         * We need to reload product in this place, because products
-                         * with the same id may have different sets of order attributes.
-                         */
-                        $product     = $this->productRepository->getById($item->getProductId(), false, $storeId, true);
-                        $options     = $item->getProduct()->getTypeInstance(true)
-                            ->getOrderOptions($item->getProduct());
-                        $info        = $options['info_buyRequest'];
-                        $productType = $item->getProductType();
-                        if ($productType === 'configurable' || $productType === 'bundle') {
-                            $this->cart->addProduct($product, $info);
-                        } else {
-                            $this->cart->addProduct($item->getProduct(), $item->getQty());
-                        }
-                    } catch (NoSuchEntityException $e) {
-                        throw new LocalizedException(__('Can not add product to cart'));
+        $quote = $this->getQuoteByShareCartToken($mpShareCartToken);
+        $items = $quote->getItemsCollection();
+        foreach ($items as $item) {
+            if (!$item->getParentItemId()) {
+                $storeId = $quote->getStoreId();
+                try {
+                    /**
+                     * We need to reload product in this place, because products
+                     * with the same id may have different sets of order attributes.
+                     */
+                    $product     = $this->productRepository->getById($item->getProductId(), false, $storeId, true);
+                    $options     = $item->getProduct()->getTypeInstance(true)
+                        ->getOrderOptions($item->getProduct());
+                    $info        = $options['info_buyRequest'];
+                    $productType = $item->getProductType();
+                    if ($productType === 'configurable' || $productType === 'bundle') {
+                        $this->cart->addProduct($product, $info);
+                    } else {
+                        $this->cart->addProduct($item->getProduct(), $item->getQty());
                     }
+                } catch (NoSuchEntityException $e) {
+                    throw new LocalizedException(__('Can not add product to cart'));
                 }
             }
-            $this->cart->save();
-
-            return $this->cartRepository->get($this->cart->getQuote()->getId());
         }
+        $this->cart->save();
 
-        throw new LocalizedException(__('The Cart is not available'));
+        return $this->cartRepository->get($this->cart->getQuote()->getId());
     }
 
     /**
@@ -138,6 +143,27 @@ class ShareCartRepository implements ShareCartRepositoryInterface
      */
     public function downloadPdf($mpShareCartToken)
     {
-        $this->printProcess->downloadPdf($mpShareCartToken);
+        $quote = $this->getQuoteByShareCartToken($mpShareCartToken);
+        $this->printProcess->downloadPdf($quote);
+    }
+
+    /**
+     * @param string $mpShareCartToken
+     *
+     * @return Quote
+     * @throws LocalizedException
+     */
+    protected function getQuoteByShareCartToken($mpShareCartToken)
+    {
+        if (!$this->helper->isEnabled()) {
+            throw new LocalizedException(__('The Share Cart extension is disable'));
+        }
+
+        $quote = $this->quoteFactory->create()->load($mpShareCartToken, 'mp_share_cart_token');
+        if (!$quote->getId()) {
+            throw new LocalizedException(__('The Cart is not available'));
+        }
+
+        return $quote;
     }
 }
