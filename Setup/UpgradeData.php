@@ -21,7 +21,6 @@
 
 namespace Mageplaza\ShareCart\Setup;
 
-use Magento\Catalog\Setup\CategorySetupFactory;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
