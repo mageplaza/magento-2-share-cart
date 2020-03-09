@@ -1,4 +1,4 @@
-# Magento 2 Share Cart extension
+# Magento 2 Share Cart extension Free
 
 [Mageplaza Share Cart Extension](https://www.mageplaza.com/magento-2-share-cart/) helps customers in sharing their shopping cart with friends and family as well. This is a supportive method to promote store’s conversion rate via the existing users, and this can significantly contribute to the revenue of the store.
 
@@ -79,9 +79,9 @@ This little simple button supports customers in taking a clear overview of chose
 **PDF** button is another extra button with the function to download. When the customer hits this button, a PDF file will be downloaded and stored automatically in the user's current device. In comparison to the **Text** button with quick view function, **PDF**'s function allows the customer to get detail information such as:
 - Information of store: Company Name, Address, Email, Phone, VAT Information, Registered Number, and Warning Message
 - Date of the purchase
-- Purchase summary: Quantity, Price, Total, Stock ID, Description
+- Purchase summary: Quantity, Price, Total, Stock ID, Descriptio
 
-![Imgur](https://i.imgur.com/mLNOyd8.png)
+![Magento 2 Share Cart extension](https://i.imgur.com/mLNOyd8.png)
 
 ## 5. More features
 
@@ -97,7 +97,7 @@ Admin is able to add a message to the PDF file, as a notice to customers (for in
 
 The module is properly responsive with both mobile and desktop devices.
 
-## 6. Full Features List
+## 6. Full Magento 2 Share Cart Features
 
 ### For store owners
 - Enable/ Disable the module
@@ -119,7 +119,7 @@ The module is properly responsive with both mobile and desktop devices.
 - Access to your Magento 2 Admin Panel, navigate to `Store tab > Open Settings > Configuration `
 - Click `Mageplaza Extensions > Share Cart > Configuration`, go to `General Configuration` section.
 
-![Imgur](https://i.imgur.com/CwdqEgU.png)
+![Magento 2 Share Cart extension configure](https://i.imgur.com/CwdqEgU.png)
 
 #### 7.1.1. General
 
@@ -145,16 +145,16 @@ After activating the module, customers can use **Share Cart** button to deliver 
 
 - **Share Cart** button displays in the **Minicart** section when adding items to cart.
 
-![Imgur](https://i.imgur.com/eHIz44c.png)
+![Magento 2 Share Cart module](https://i.imgur.com/eHIz44c.png)
 
 - Display play **Share Cart** button on **Shopping Cart** page, customers can click this button to share the cart URL.
 
-![Imgur](https://i.imgur.com/CeJ3eXe.png)
+![Magento 2 Share Cart extension free](https://i.imgur.com/CeJ3eXe.png)
 
   - Customers can click **Update Shopping Cart** to re-update information and changes in the original cart.
   - Click **Text** button to see detail information about products and price.
   
-  ![Imgur](https://i.imgur.com/ioURPW6.png)
+  ![Magento 2 Share Cart Free](https://i.imgur.com/ioURPW6.png)
   
   - Click on **PDF** button to see the order information.
     
@@ -166,4 +166,16 @@ You need to delete the generated file and run the following command:
 composer require mpdf/mpdf
 `
 
-![Imgur](https://i.imgur.com/9pOaeMf.png)
+![Magento 2 Share Cart extension by mageplaza](https://i.imgur.com/9pOaeMf.png)
+
+
+**Other free Magento 2 extensions on Github**
+- [Magento 2 SEO Suite free](https://github.com/mageplaza/magento-2-seo)
+- [Magento 2 Google Maps free](https://github.com/mageplaza/magento-2-google-maps)
+- [Magento 2 Backend Reindex](https://github.com/mageplaza/magento-2-backend-reindex)
+- [Magento 2 GDPR free](https://github.com/mageplaza/magento-2-gdpr)
+- [Magento 2 login as customer free](https://github.com/mageplaza/magento-2-login-as-customer)
+- [Magento 2 Social login free](https://github.com/mageplaza/magento-2-social-login)
+- [Magento 2 Advanced report free](https://github.com/mageplaza/magento-2-reports)
+- [Magento 2 Blog free](https://github.com/mageplaza/magento-2-blog)
+
