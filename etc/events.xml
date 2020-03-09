@@ -20,10 +20,8 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 -->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <body>
-        <referenceContainer name="content">
-            <block class="Mageplaza\ShareCart\Block\Cart\Button" name="mp.sharecart" template="Mageplaza_ShareCart::cart/button.phtml" after="checkout.cart.order.actions"/>
-        </referenceContainer>
-    </body>
-</page>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_quote_save_after">
+        <observer name="mp_share_cart_create_token" instance="Mageplaza\ShareCart\Observer\QuoteSaveAfter"/>
+    </event>
+</config>

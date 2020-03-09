@@ -26,6 +26,7 @@ define([
     'use strict';
 
     var isReload = true;
+
     return Component.extend({
         defaults: {
             template: 'Mageplaza_ShareCart/minicart'
@@ -46,7 +47,8 @@ define([
         },
 
         copyQuote: function (object, e) {
-            const quoteUrl = document.createElement('textarea');
+            var quoteUrl = document.createElement('textarea');
+
             quoteUrl.value = customerData.get('cart')().quote_url;
             document.body.appendChild(quoteUrl);
             quoteUrl.select();

@@ -21,14 +21,19 @@
 
 namespace Mageplaza\ShareCart\Helper;
 
-use Magento\Checkout\Model\Session;
+use Exception;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Framework\Stdlib\DateTime\TimeZone;
+use Magento\Quote\Model\Quote;
 use Magento\Store\Model\StoreManagerInterface;
+use Mageplaza\ShareCart\Model\Template\Processor;
+use Mpdf\Mpdf;
+use Mpdf\MpdfException;
 
 /**
  * Class PrintProcess
@@ -47,7 +52,7 @@ class PrintProcess extends Data
     protected $directoryList;
 
     /**
-     * @var \Magento\Framework\Filesystem
+     * @var Filesystem
      */
     protected $fileSystem;
 
@@ -67,21 +72,22 @@ class PrintProcess extends Data
     protected $timezone;
 
     /**
-     * @var Session
+     * @var Processor
      */
-    protected $checkoutSession;
+    protected $templateProcessor;
 
     /**
      * PrintProcess constructor.
+     *
      * @param Context $context
      * @param Filesystem $fileSystem
      * @param DirectoryList $directoryList
      * @param StoreManagerInterface $storeManager
      * @param ObjectManagerInterface $objectManager
-     * @param Session $checkoutSession
      * @param Data $helper
      * @param DateTime $dateTime
      * @param TimeZone $timezone
+     * @param Processor $templateProcessor
      */
     public function __construct(
         Context $context,
@@ -89,26 +95,26 @@ class PrintProcess extends Data
         DirectoryList $directoryList,
         StoreManagerInterface $storeManager,
         ObjectManagerInterface $objectManager,
-        Session $checkoutSession,
         Data $helper,
         DateTime $dateTime,
-        TimeZone $timezone
-    )
-    {
-        $this->checkoutSession = $checkoutSession;
-        $this->fileSystem      = $fileSystem;
-        $this->directoryList   = $directoryList;
-        $this->helper          = $helper;
-        $this->dateTime        = $dateTime;
-        $this->timezone        = $timezone;
+        TimeZone $timezone,
+        Processor $templateProcessor
+    ) {
+        $this->fileSystem        = $fileSystem;
+        $this->directoryList     = $directoryList;
+        $this->helper            = $helper;
+        $this->dateTime          = $dateTime;
+        $this->timezone          = $timezone;
+        $this->templateProcessor = $templateProcessor;
 
         parent::__construct($context, $objectManager, $storeManager);
     }
 
     /**
      * @param $relativePath
+     *
      * @return string
-     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws FileSystemException
      */
     public function readFile($relativePath)
     {
@@ -131,14 +137,17 @@ class PrintProcess extends Data
     }
 
     /**
-     * @param $storeId
+     * @param Quote $quote
+     *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
-    public function addCustomTemplateVars($storeId)
+    public function addCustomTemplateVars($quote)
     {
-        $templateVars['quote']      = $this->checkoutSession->getQuote();
-        $templateVars['store']      = $this->checkoutSession->getQuote()->getStore();
+        $storeId = $quote->getStoreId();
+
+        $templateVars['quote']      = $quote;
+        $templateVars['store']      = $quote->getStore();
         $templateVars['vat_number'] = $this->helper->getVATNumber($storeId);
         $templateVars['phone']      = $this->helper->getPhone($storeId);
         $templateVars['contact']    = $this->helper->getEmail($storeId);
@@ -153,8 +162,9 @@ class PrintProcess extends Data
 
     /**
      * @param $date
+     *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function formatDate($date)
     {
@@ -170,7 +180,7 @@ class PrintProcess extends Data
             $currentDate = (new \DateTime($dateTime));
 
             return $currentDate->format('Y-m-d H:i');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $dateTime;
         }
     }
@@ -197,11 +207,35 @@ class PrintProcess extends Data
             $rootPathArr = explode('\\', $rootPath);
         }
 
-        $basePath = '';
-        for ($i = count($rootPathArr); $i < count($currentDirArr) - 1; $i++) {
+        $basePath           = '';
+        $rootPathArrCount   = count($rootPathArr);
+        $currentDirArrCount = count($currentDirArr);
+        for ($i = $rootPathArrCount; $i < $currentDirArrCount - 1; $i++) {
             $basePath .= $currentDirArr[$i] . '/';
         }
 
         return $basePath . 'view/base/templates/';
+    }
+
+    /**
+     * @param Quote $quote
+     *
+     * @throws FileSystemException
+     * @throws MpdfException
+     * @throws Exception
+     */
+    public function downloadPdf($quote)
+    {
+        $html = $this->readFile($this->getBaseTemplatePath() . 'template.html');
+        $mpdf = new Mpdf(['tempDir' => BP . '/var/tmp']);
+
+        $processor = $this->templateProcessor->setVariable(
+            $this->addCustomTemplateVars($quote)
+        );
+        $processor->setTemplateHtml($html);
+        $processor->setStore($quote->getStoreId());
+        $html = $processor->processTemplate();
+        $mpdf->WriteHTML($html);
+        $mpdf->Output($this->getFileName(), 'D');
     }
 }

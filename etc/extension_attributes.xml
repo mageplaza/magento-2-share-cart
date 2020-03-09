@@ -15,15 +15,13 @@
  * version in the future.
  *
  * @category    Mageplaza
- * @package     Mageplaza_ShareCart
+ * @package     Mageplaza_StoreCredit
  * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 -->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <body>
-        <referenceContainer name="content">
-            <block class="Mageplaza\ShareCart\Block\Cart\Button" name="mp.sharecart" template="Mageplaza_ShareCart::cart/button.phtml" after="checkout.cart.order.actions"/>
-        </referenceContainer>
-    </body>
-</page>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
+    <extension_attributes for="Magento\Quote\Api\Data\CartInterface">
+        <attribute code="mp_share_cart_token" type="string"/>
+    </extension_attributes>
+</config>

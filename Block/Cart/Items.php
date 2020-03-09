@@ -25,8 +25,13 @@ use Magento\Catalog\Model\ProductRepository;
 use Magento\Checkout\Model\Session;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Directory\Model\Currency;
+use Magento\Eav\Model\Entity\Collection\AbstractCollection;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
+use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\Quote\Item;
 
 /**
  * Class Items
@@ -56,6 +61,7 @@ class Items extends Template
 
     /**
      * Items constructor.
+     *
      * @param Context $context
      * @param Session $checkoutSession
      * @param Currency $currency
@@ -70,8 +76,7 @@ class Items extends Template
         ProductRepository $productRepository,
         Configurable $configurable,
         array $data = []
-    )
-    {
+    ) {
         $this->_currency          = $currency;
         $this->checkoutSession    = $checkoutSession;
         $this->_productRepository = $productRepository;
@@ -91,15 +96,38 @@ class Items extends Template
     }
 
     /**
-     * @return \Magento\Eav\Model\Entity\Collection\AbstractCollection
+     * @param Quote|null $quote
+     *
+     * @return AbstractCollection|null
      */
-    public function getItems()
+    public function getItems($quote = null)
     {
-        return $this->checkoutSession->getQuote()->getItemsCollection();
+        $quote = $this->getQuote($quote);
+
+        return $quote ? $quote->getItemsCollection() : null;
     }
 
     /**
-     * @param $item
+     * @param Quote|null $quote
+     *
+     * @return Quote|null
+     */
+    public function getQuote($quote = null)
+    {
+        try {
+            $quote = $quote ?: $this->checkoutSession->getQuote();
+        } catch (NoSuchEntityException $e) {
+            return null;
+        } catch (LocalizedException $e) {
+            return null;
+        }
+
+        return $quote;
+    }
+
+    /**
+     * @param Item $item
+     *
      * @return array
      */
     public function checkConfigurableProduct($item)
@@ -108,20 +136,30 @@ class Items extends Template
     }
 
     /**
-     * @param $item
+     * @param Item $item
+     *
      * @return null|string
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getNameConfigurable($item)
     {
-        return $this->_productRepository->get($item->getSku())->getName();
+        try {
+            $product = $this->_productRepository->get($item->getSku());
+        } catch (NoSuchEntityException $e) {
+            return null;
+        }
+
+        return $product;
     }
 
     /**
+     * @param Quote|null $quote
+     *
      * @return float
      */
-    public function getBaseSubtotal()
+    public function getBaseSubtotal($quote = null)
     {
-        return $this->checkoutSession->getQuote()->getBaseSubtotal();
+        $quote = $this->getQuote($quote);
+
+        return $quote ? $quote->getBaseSubtotal() : null;
     }
 }

@@ -53,6 +53,7 @@ class Processor extends Template
 
     /**
      * Set template html
+     *
      * @param $html
      */
     public function setTemplateHtml($html)
@@ -62,6 +63,7 @@ class Processor extends Template
 
     /**
      * Set store
+     *
      * @param $storeId
      */
     public function setStore($storeId)
@@ -71,7 +73,9 @@ class Processor extends Template
 
     /**
      * Set variable
+     *
      * @param $data
+     *
      * @return $this
      */
     public function setVariable($data)
