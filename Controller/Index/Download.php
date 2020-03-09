@@ -43,6 +43,7 @@ class Download extends Action
      * @var ShareCartRepositoryInterface
      */
     protected $printProcess;
+
     /**
      * @var Session
      */

@@ -3,10 +3,10 @@
   "description": "Magento 2 Share Cart extension",
   "type": "magento2-module",
   "require": {
-    "mageplaza/module-core": "^1.4.0",
+    "mageplaza/module-core": "^1.4.5",
     "mpdf/mpdf": "^7.1.0"
   },
-  "version": "1.0.2",
+  "version": "1.1.0",
   "license": "proprietary",
   "authors": [
     {

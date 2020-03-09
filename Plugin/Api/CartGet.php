@@ -21,12 +21,12 @@
 
 namespace Mageplaza\ShareCart\Plugin\Api;
 
+use Exception;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\CartExtensionFactory;
 use Magento\Quote\Api\Data\CartInterface;
-use Magento\Sales\Api\Data\OrderExtension;
 use Magento\Quote\Model\QuoteFactory;
-use Exception;
+use Magento\Sales\Api\Data\OrderExtension;
 
 /**
  * Class CartGet

@@ -61,7 +61,6 @@ class UpgradeData implements UpgradeDataInterface
             $quoteInstaller = $this->quoteSetupFactory->create(['resourceName' => 'quote_setup', 'setup' => $setup]);
 
             $quoteInstaller->addAttribute('quote', 'mp_share_cart_token', ['type' => 'text']);
-
         }
 
         $setup->endSetup();

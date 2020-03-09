@@ -22,14 +22,14 @@
 namespace Mageplaza\ShareCart\Model;
 
 use Magento\Catalog\Model\ProductRepository;
+use Magento\Checkout\Model\Cart;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\QuoteFactory;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\ShareCart\Api\ShareCartRepositoryInterface;
-use Magento\Quote\Model\QuoteFactory;
-use Magento\Checkout\Model\Cart;
 use Mageplaza\ShareCart\Helper\Data;
 use Mageplaza\ShareCart\Helper\PrintProcess;
 
@@ -48,6 +48,7 @@ class ShareCartRepository implements ShareCartRepositoryInterface
      * @var StoreManagerInterface
      */
     protected $storeManager;
+
     /**
      * @var ProductRepository
      */

@@ -42,6 +42,7 @@ class Data extends AbstractData
 
     /**
      * @param null $storeId
+     *
      * @return array|mixed
      */
     public function getCompanyName($storeId = null)
@@ -51,6 +52,7 @@ class Data extends AbstractData
 
     /**
      * @param null $storeId
+     *
      * @return array|mixed
      */
     public function getAddress($storeId = null)
@@ -60,6 +62,7 @@ class Data extends AbstractData
 
     /**
      * @param null $storeId
+     *
      * @return array|mixed
      */
     public function getVATNumber($storeId = null)
@@ -69,6 +72,7 @@ class Data extends AbstractData
 
     /**
      * @param null $storeId
+     *
      * @return array|mixed
      */
     public function getPhone($storeId = null)
@@ -78,6 +82,7 @@ class Data extends AbstractData
 
     /**
      * @param null $storeId
+     *
      * @return array|mixed
      */
     public function getEmail($storeId = null)
@@ -87,6 +92,7 @@ class Data extends AbstractData
 
     /**
      * @param null $storeId
+     *
      * @return array|mixed
      */
     public function getRegisteredNumber($storeId = null)
@@ -96,6 +102,7 @@ class Data extends AbstractData
 
     /**
      * @param null $storeId
+     *
      * @return array|mixed
      */
     public function getWarningMessage($storeId = null)
