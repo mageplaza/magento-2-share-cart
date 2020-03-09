@@ -17,7 +17,7 @@
 - [Contribute on Github](https://github.com/mageplaza/magento-2-share-cart)
 - [Get Support](https://github.com/mageplaza/magento-2-share-cart/issues)
 
-## 2. FAQs
+## 2. FAQs 
 
 **Q: I got an error: Mageplaza_Core has been already defined**
 
