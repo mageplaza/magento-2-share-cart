@@ -24,7 +24,6 @@ namespace Mageplaza\ShareCart\Block\Cart;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Checkout\Model\Session;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
-use Magento\Directory\Model\Currency;
 use Magento\Eav\Model\Entity\Collection\AbstractCollection;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -45,11 +44,6 @@ class Button extends Template
      * @var \Magento\Customer\Model\Session
      */
     protected $checkoutSession;
-
-    /**
-     * @var Currency
-     */
-    protected $_currency;
 
     /**
      * @var ProductRepository
@@ -81,7 +75,6 @@ class Button extends Template
      *
      * @param Context $context
      * @param Session $checkoutSession
-     * @param Currency $currency
      * @param ProductRepository $productRepository
      * @param Configurable $configurable
      * @param PriceCurrencyInterface $priceCurrency
@@ -91,14 +84,12 @@ class Button extends Template
     public function __construct(
         Context $context,
         Session $checkoutSession,
-        Currency $currency,
         ProductRepository $productRepository,
         Configurable $configurable,
         PriceCurrencyInterface $priceCurrency,
         Data $helper,
         array $data = []
     ) {
-        $this->_currency          = $currency;
         $this->checkoutSession    = $checkoutSession;
         $this->_productRepository = $productRepository;
         $this->configurable       = $configurable;
@@ -106,16 +97,6 @@ class Button extends Template
         $this->helper             = $helper;
 
         parent::__construct($context, $data);
-    }
-
-    /**
-     * Get currency symbol for current locale and currency code
-     *
-     * @return string
-     */
-    public function getCurrentCurrencySymbol()
-    {
-        return $this->_currency->getCurrencySymbol();
     }
 
     /**
@@ -171,7 +152,7 @@ class Button extends Template
      */
     public function formatPrice($price)
     {
-        return $this->priceCurrency->format($price, false);
+        return $this->helper->convertPrice($price, true, false);
     }
 
     /**

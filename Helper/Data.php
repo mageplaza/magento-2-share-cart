@@ -21,6 +21,10 @@
 
 namespace Mageplaza\ShareCart\Helper;
 
+use Magento\Framework\App\Helper\Context;
+use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\Core\Helper\AbstractData;
 
 /**
@@ -31,6 +35,29 @@ class Data extends AbstractData
 {
     const CONFIG_MODULE_PATH   = 'sharecart';
     const BUSINESS_CONFIG_PATH = 'business_information';
+    /**
+     * @var PriceCurrencyInterface
+     */
+    private $priceCurrency;
+
+    /**
+     * Data constructor.
+     *
+     * @param Context $context
+     * @param ObjectManagerInterface $objectManager
+     * @param StoreManagerInterface $storeManager
+     * @param PriceCurrencyInterface $priceCurrency
+     */
+    public function __construct(
+        Context $context,
+        ObjectManagerInterface $objectManager,
+        StoreManagerInterface $storeManager,
+        PriceCurrencyInterface $priceCurrency
+    ) {
+        $this->priceCurrency = $priceCurrency;
+
+        parent::__construct($context, $objectManager, $storeManager);
+    }
 
     /**
      * @return bool
@@ -108,5 +135,25 @@ class Data extends AbstractData
     public function getWarningMessage($storeId = null)
     {
         return $this->getModuleConfig(self::BUSINESS_CONFIG_PATH . '/message', $storeId);
+    }
+
+    /**
+     * @param float $amount
+     * @param bool $format
+     * @param bool $includeContainer
+     * @param null $scope
+     *
+     * @return float|string
+     */
+    public function convertPrice($amount, $format = true, $includeContainer = true, $scope = null)
+    {
+        return $format
+            ? $this->priceCurrency->convertAndFormat(
+                $amount,
+                $includeContainer,
+                PriceCurrencyInterface::DEFAULT_PRECISION,
+                $scope
+            )
+            : $this->priceCurrency->convert($amount, $scope);
     }
 }
