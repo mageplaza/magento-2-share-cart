@@ -38,7 +38,7 @@ class Data extends AbstractData
     /**
      * @var PriceCurrencyInterface
      */
-    private $priceCurrency;
+    protected $priceCurrency;
 
     /**
      * Data constructor.

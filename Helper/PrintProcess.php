@@ -34,6 +34,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\ShareCart\Model\Template\Processor;
 use Mpdf\Mpdf;
 use Mpdf\MpdfException;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
 
 /**
  * Class PrintProcess
@@ -88,6 +89,7 @@ class PrintProcess extends Data
      * @param DateTime $dateTime
      * @param TimeZone $timezone
      * @param Processor $templateProcessor
+     * @param PriceCurrencyInterface $priceCurrency
      */
     public function __construct(
         Context $context,
@@ -98,7 +100,8 @@ class PrintProcess extends Data
         Data $helper,
         DateTime $dateTime,
         TimeZone $timezone,
-        Processor $templateProcessor
+        Processor $templateProcessor,
+        PriceCurrencyInterface $priceCurrency
     ) {
         $this->fileSystem        = $fileSystem;
         $this->directoryList     = $directoryList;
@@ -107,7 +110,7 @@ class PrintProcess extends Data
         $this->timezone          = $timezone;
         $this->templateProcessor = $templateProcessor;
 
-        parent::__construct($context, $objectManager, $storeManager);
+        parent::__construct($context, $objectManager, $storeManager, $priceCurrency);
     }
 
     /**
