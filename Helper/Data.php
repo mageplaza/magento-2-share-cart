@@ -35,6 +35,7 @@ class Data extends AbstractData
 {
     const CONFIG_MODULE_PATH   = 'sharecart';
     const BUSINESS_CONFIG_PATH = 'business_information';
+
     /**
      * @var PriceCurrencyInterface
      */

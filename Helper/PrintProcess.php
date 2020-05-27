@@ -27,6 +27,7 @@ use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Framework\Stdlib\DateTime\TimeZone;
 use Magento\Quote\Model\Quote;
@@ -34,7 +35,6 @@ use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\ShareCart\Model\Template\Processor;
 use Mpdf\Mpdf;
 use Mpdf\MpdfException;
-use Magento\Framework\Pricing\PriceCurrencyInterface;
 
 /**
  * Class PrintProcess
