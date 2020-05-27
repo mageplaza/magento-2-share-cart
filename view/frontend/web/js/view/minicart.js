@@ -42,6 +42,12 @@ define([
             this.customer = customerData.get('cart');
         },
 
+        moveShareCart: function(){
+            $(document).ready(function () {
+                $('.secondary.sharecart').appendTo($('.action.viewcart').parent());
+            });
+        },
+
         getQuoteId: function () {
             return customerData.get('cart')().quote_url;
         },

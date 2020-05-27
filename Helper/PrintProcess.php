@@ -27,6 +27,7 @@ use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Framework\Stdlib\DateTime\TimeZone;
 use Magento\Quote\Model\Quote;
@@ -88,6 +89,7 @@ class PrintProcess extends Data
      * @param DateTime $dateTime
      * @param TimeZone $timezone
      * @param Processor $templateProcessor
+     * @param PriceCurrencyInterface $priceCurrency
      */
     public function __construct(
         Context $context,
@@ -98,7 +100,8 @@ class PrintProcess extends Data
         Data $helper,
         DateTime $dateTime,
         TimeZone $timezone,
-        Processor $templateProcessor
+        Processor $templateProcessor,
+        PriceCurrencyInterface $priceCurrency
     ) {
         $this->fileSystem        = $fileSystem;
         $this->directoryList     = $directoryList;
@@ -107,7 +110,7 @@ class PrintProcess extends Data
         $this->timezone          = $timezone;
         $this->templateProcessor = $templateProcessor;
 
-        parent::__construct($context, $objectManager, $storeManager);
+        parent::__construct($context, $objectManager, $storeManager, $priceCurrency);
     }
 
     /**

@@ -31,7 +31,7 @@
                     <item name="components" xsi:type="array">
                         <item name="minicart_content" xsi:type="array">
                             <item name="children" xsi:type="array">
-                                <item name="promotion" xsi:type="array">
+                                <item name="extra_info" xsi:type="array">
                                     <item name="children" xsi:type="array">
                                         <item name="mp_sharecart" xsi:type="array">
                                             <item name="component" xsi:type="string">Mageplaza_ShareCart/js/view/minicart</item>

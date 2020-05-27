@@ -32,6 +32,7 @@ use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Item;
+use Mageplaza\ShareCart\Helper\Data;
 
 /**
  * Class Items
@@ -60,6 +61,11 @@ class Items extends Template
     protected $configurable;
 
     /**
+     * @var Data
+     */
+    protected $helper;
+
+    /**
      * Items constructor.
      *
      * @param Context $context
@@ -67,6 +73,7 @@ class Items extends Template
      * @param Currency $currency
      * @param ProductRepository $productRepository
      * @param Configurable $configurable
+     * @param Data $helper
      * @param array $data
      */
     public function __construct(
@@ -75,24 +82,26 @@ class Items extends Template
         Currency $currency,
         ProductRepository $productRepository,
         Configurable $configurable,
+        Data $helper,
         array $data = []
     ) {
         $this->_currency          = $currency;
         $this->checkoutSession    = $checkoutSession;
         $this->_productRepository = $productRepository;
         $this->configurable       = $configurable;
+        $this->helper             = $helper;
 
         parent::__construct($context, $data);
     }
 
     /**
-     * Get currency symbol for current locale and currency code
+     * @param float $price
      *
-     * @return string
+     * @return float
      */
-    public function getCurrentCurrencySymbol()
+    public function formatPrice($price)
     {
-        return $this->_currency->getCurrencySymbol();
+        return $this->helper->convertPrice($price, true, false);
     }
 
     /**
