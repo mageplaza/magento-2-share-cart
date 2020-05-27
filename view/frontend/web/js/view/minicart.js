@@ -21,9 +21,8 @@ define([
     'jquery',
     'uiComponent',
     'Magento_Customer/js/customer-data',
-    'mage/translate',
-    'rjsResolver'
-], function ($, Component, customerData, $t, resolver) {
+    'mage/translate'
+], function ($, Component, customerData, $t) {
     'use strict';
 
     var isReload = true;
@@ -41,10 +40,9 @@ define([
                 isReload = false;
             }
             this.customer = customerData.get('cart');
-            resolver(this.afterResolveDocument.bind(this));
         },
 
-        afterResolveDocument: function () {
+        moveShareCart: function(){
             $(document).ready(function () {
                 $('.secondary.sharecart').appendTo($('.action.viewcart').parent());
             });

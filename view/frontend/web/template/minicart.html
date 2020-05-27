@@ -20,7 +20,7 @@
  */
  -->
 <!--ko if: isDisplay() -->
-    <div class="secondary sharecart" style="text-align: center">
+    <div class="secondary sharecart" style="text-align: center" afterRender="moveShareCart()">
         <a class="action sharecart mp-sharecart-minicart" data-bind="click: copyQuote, event: {mouseleave: leaveQuote}"
            style="cursor: pointer">
             <span data-bind="i18n: 'Share Cart'"></span>
