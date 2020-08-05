@@ -63,6 +63,27 @@ class UpgradeData implements UpgradeDataInterface
             $quoteInstaller->addAttribute('quote', 'mp_share_cart_token', ['type' => 'text']);
         }
 
+        if (version_compare($context->getVersion(), '1.0.2') < 0) {
+            $setup->getConnection()->changeColumn(
+                $setup->getTable('quote'),
+                'mp_share_cart_token',
+                'mp_share_cart_token',
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'length' => 255
+                ]
+            );
+
+            $setup->getConnection()->addIndex(
+                $setup->getTable('quote'),
+                $setup->getConnection()->getIndexName(
+                    $setup->getTable('quote'),
+                    'mp_share_cart_token'
+                ),
+                ['mp_share_cart_token']
+            );
+        }
+
         $setup->endSetup();
     }
 }
