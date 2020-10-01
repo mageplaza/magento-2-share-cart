@@ -21,6 +21,7 @@
 
 namespace Mageplaza\ShareCart\Setup;
 
+use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
@@ -69,7 +70,7 @@ class UpgradeData implements UpgradeDataInterface
                 'mp_share_cart_token',
                 'mp_share_cart_token',
                 [
-                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'type'   => Table::TYPE_TEXT,
                     'length' => 255
                 ]
             );

@@ -32,8 +32,8 @@ $quote = $block->getData('quote');
         <th><?= /** @noEscape */  __('Price') ?></th>
         <th class="th5"><?= /** @noEscape */  __('Total') ?></th>
     </tr>
-    <?php foreach ($block->getItems($quote) as $item) : ?>
-        <?php if ($item->getProductType() === 'configurable') : ?>
+    <?php foreach ($block->getItems($quote) as $item): ?>
+        <?php if ($item->getProductType() === 'configurable'): ?>
             <tr>
                 <td><?= /** @noEscape */  $item->getQty() ?></td>
                 <td><?= /** @noEscape */  $item->getSku() ?></td>
@@ -42,10 +42,10 @@ $quote = $block->getData('quote');
                 <td class="td5 mark"><?= /** @noEscape */  $block->formatPrice($item->getBaseRowTotalInclTax()) ?></td>
             </tr>
         <?php endif; ?>
-        <?php if ($item->getParentItemId() && $block->checkConfigurableProduct($item)) : ?>
+        <?php if ($item->getParentItemId() && $block->checkConfigurableProduct($item)): ?>
             <?php continue ?>
         <?php endif; ?>
-        <?php if ($item->getProductType() !== 'configurable') : ?>
+        <?php if ($item->getProductType() !== 'configurable'): ?>
             <tr>
                 <td><?= /** @noEscape */  $item->getQty() ?></td>
                 <td><?= /** @noEscape */  $item->getSku() ?></td>
