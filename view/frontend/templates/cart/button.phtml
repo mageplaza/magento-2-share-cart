@@ -23,7 +23,7 @@
 
 ?>
 
-<?php if ($block->isEnable() && $block->getItemsCount()) : ?>
+<?php if ($block->isEnable() && $block->getItemsCount()): ?>
     <script data-role="mp_show_download_share-tmpl" type="text/x-magento-template">
         <button data-bind="click:function(){}"
                 name="action_show_cart"
@@ -49,17 +49,17 @@
     </script>
     <script data-role="mp_show_popup-tmpl" type="text/x-magento-template">
         <div id="popup-cart" class="mp-popup-cart">
-            <?php foreach ($block->getItems() as $item) : ?>
-                <?php if ($item->getProductType() === 'configurable') : ?>
+            <?php foreach ($block->getItems() as $item): ?>
+                <?php if ($item->getProductType() === 'configurable'): ?>
                     <?= /** @noEscape */ ($item->getQty() . ' x ' .
                         $block->getNameConfigurable($item) . ' - ' .
                         $block->formatPrice($item->getBasePriceInclTax()))
                     ?>
                 <?php endif; ?>
-                <?php if ($item->getParentItemId() && $block->checkConfigurableProduct($item)) : ?>
+                <?php if ($item->getParentItemId() && $block->checkConfigurableProduct($item)): ?>
                     <?php continue ?>
                 <?php endif; ?>
-                <?php if ($item->getProductType() !== 'configurable') : ?>
+                <?php if ($item->getProductType() !== 'configurable'): ?>
                     <?= /** @noEscape */ ($item->getQty() . ' x ' .
                     $item->getName() . ' - ' .
                     $block->formatPrice($item->getBasePriceInclTax())) ?>

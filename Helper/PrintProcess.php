@@ -133,7 +133,7 @@ class PrintProcess extends Data
     {
         $name = $this->getConfigGeneral('file_name') ?: 'cart';
         if ($this->getConfigGeneral('timestamp')) {
-            $name .= ' ' . $this->dateTime->date('Y-m-d H.i');
+            $name .= ' ' . $this->formatDate($this->dateTime->date('Y-m-d H.i'));
         }
 
         return $name . '.pdf';
