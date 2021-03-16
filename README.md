@@ -181,3 +181,25 @@ composer require mpdf/mpdf
 - [Magento 2 Advanced report free](https://github.com/mageplaza/magento-2-reports)
 - [Magento 2 Blog free](https://github.com/mageplaza/magento-2-blog)
 
+
+**Explore more Magento 2 extensions from Mageplaza**
+
+☞ [Mageplaza Login as Customer](https://www.mageplaza.com/magento-2-login-as-customer/)
+
+☞ [Mageplaza Image Optimizer](https://www.mageplaza.com/magento-2-image-optimizer/)
+
+☞ [Mageplaza Customer Attributes](https://www.mageplaza.com/magento-2-customer-attributes/)
+
+☞ [Mageplaza Layered Navitaion Ultimate](https://www.mageplaza.com/magento-2-layered-navigation-extension/)
+
+☞ [M2 Google Tag Manager](https://www.mageplaza.com/magento-2-google-tag-manager/)
+
+☞ [Mageplaza Ajax Cart](https://www.mageplaza.com/magento-2-quick-view/)
+
+☞ [Mageplaza Store Pickup](https://www.mageplaza.com/magento-2-store-pickup-extension/)
+
+☞ [Mageplaza Product Options](https://www.mageplaza.com/magento-2-product-options/)
+
+☞ [Mageplaza OneStepCheckout](https://www.mageplaza.com/magento-2-one-step-checkout-extension/)
+
+☞ [Mageplaza Reward Points](https://www.mageplaza.com/magento-2-reward-points-extension/)
