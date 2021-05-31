@@ -169,6 +169,6 @@ class Items extends Template
     {
         $quote = $this->getQuote($quote);
 
-        return $quote ? $quote->getBaseSubtotal() : null;
+        return $quote ? $quote->getBaseGrandTotal() : null;
     }
 }
