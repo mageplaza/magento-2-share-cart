@@ -164,7 +164,7 @@ class Button extends Template
     {
         $quote = $this->getQuote($quote);
 
-        return $quote ? $this->formatPrice($quote->getBaseSubtotal()) : null;
+        return $quote ? $this->formatPrice($quote->getBaseGrandTotal()) : null;
     }
 
     /**
