@@ -160,7 +160,7 @@ class Button extends Template
      *
      * @return float|null
      */
-    public function getBaseSubtotal($quote = null)
+    public function getBaseGrandTotal($quote = null)
     {
         $quote = $this->getQuote($quote);
 
