@@ -165,7 +165,7 @@ class Items extends Template
      *
      * @return float
      */
-    public function getBaseSubtotal($quote = null)
+    public function getBaseGrandTotal($quote = null)
     {
         $quote = $this->getQuote($quote);
 
