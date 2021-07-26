@@ -51,12 +51,19 @@ A: **Text** button only displays chosen items while **PDF** button offers more i
 
 Run the following command in Magento 2 root folder:
 
+With Marketing Automation (recommend):
 ```
 composer require mageplaza/module-share-cart
 php bin/magento setup:upgrade
 php bin/magento setup:static-content:deploy
 ```
 
+Without Marketing Automation:
+```
+composer require mageplaza/module-share-cart
+php bin/magento setup:upgrade
+php bin/magento setup:static-content:deploy
+```
 ## 4. Highlight Features
 
 ### Quick share by copy-and-paste 
