@@ -44,7 +44,7 @@ define([
 
         moveShareCart: function(){
             $(document).ready(function () {
-                $('.secondary.sharecart').appendTo($('.action.viewcart').parent());
+                $('.secondary.sharecart').appendTo($('#minicart-content-wrapper .action.viewcart').parent());
             });
         },
 
