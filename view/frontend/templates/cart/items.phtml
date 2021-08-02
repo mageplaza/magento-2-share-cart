@@ -57,6 +57,6 @@ $quote = $block->getData('quote');
     <?php endforeach ?>
     <tr class="tr1">
         <td class="td1" colspan="4"><?= /** @noEscape */ __('Cart Total') ?></td>
-        <td class="td5 mark"><?= /** @noEscape */  $block->getBaseSubtotal($quote) ?></td>
+        <td class="td5 mark"><?= /** @noEscape */  $block->getBaseGrandTotal($quote) ?></td>
     </tr>
 </table>
