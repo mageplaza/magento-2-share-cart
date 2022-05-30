@@ -123,14 +123,8 @@ class ShareCartRepository implements ShareCartRepositoryInterface
                     $options     = $item->getProduct()->getTypeInstance(true)
                         ->getOrderOptions($item->getProduct());
                     $info        = $options['info_buyRequest'];
-                    $productType = $item->getProductType();
-                    $info['qty'] = $item->getQty();
-
-                    if ($productType === 'configurable' || $productType === 'bundle') {
-                        $this->cart->addProduct($product, $info);
-                    } else {
-                        $this->cart->addProduct($item->getProduct(), $info);
-                    }
+                    $info["qty"] = $item->getQty();
+                    $this->cart->addProduct($product, $info);
                 } catch (NoSuchEntityException $e) {
                     throw new LocalizedException(__('Can not add product to cart'));
                 }
