@@ -38,8 +38,8 @@ $quote = $block->getData('quote');
                 <td><?= /** @noEscape */  $item->getQty() ?></td>
                 <td><?= /** @noEscape */  $item->getSku() ?></td>
                 <td><?= /** @noEscape */  $block->getNameConfigurable($item) ?></td>
-                <td><?= /** @noEscape */  $block->formatPrice($item->getBasePriceInclTax()) ?></td>
-                <td class="td5 mark"><?= /** @noEscape */  $block->formatPrice($item->getBaseRowTotalInclTax()) ?></td>
+                <td><?= /** @noEscape */  $block->formatPrice($item->getBasePrice()) ?></td>
+                <td class="td5 mark"><?= /** @noEscape */  $block->formatPrice($item->getBaseRowTotal()) ?></td>
             </tr>
         <?php endif; ?>
         <?php if ($item->getParentItemId() && $block->checkConfigurableProduct($item)): ?>
@@ -50,8 +50,8 @@ $quote = $block->getData('quote');
                 <td><?= /** @noEscape */  $item->getQty() ?></td>
                 <td><?= /** @noEscape */  $item->getSku() ?></td>
                 <td><?= /** @noEscape */  $item->getName() ?></td>
-                <td><?= /** @noEscape */  $block->formatPrice($item->getBasePriceInclTax()) ?></td>
-                <td class="td5 mark"><?= /** @noEscape */  $block->formatPrice($item->getBaseRowTotalInclTax()) ?></td>
+                <td><?= /** @noEscape */  $block->formatPrice($item->getBasePrice()) ?></td>
+                <td class="td5 mark"><?= /** @noEscape */  $block->formatPrice($item->getBaseRowTotal()) ?></td>
             </tr>
         <?php endif; ?>
     <?php endforeach ?>
