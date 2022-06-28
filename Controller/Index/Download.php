@@ -26,11 +26,13 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Mageplaza\ShareCart\Api\ShareCartRepositoryInterface;
+use Mageplaza\ShareCart\Helper\Data;
 use Mpdf\MpdfException;
 
 /**
@@ -50,19 +52,27 @@ class Download extends Action
     protected $checkoutSession;
 
     /**
+     * @var Data
+     */
+    protected $helper;
+
+    /**
      * Download constructor.
      *
      * @param Context $context
      * @param ShareCartRepositoryInterface $printProcess
      * @param Session $checkoutSession
+     * @param Data $helper
      */
     public function __construct(
         Context $context,
         ShareCartRepositoryInterface $printProcess,
-        Session $checkoutSession
+        Session $checkoutSession,
+        Data $helper
     ) {
         $this->printProcess    = $printProcess;
         $this->checkoutSession = $checkoutSession;
+        $this->helper            = $helper;
 
         parent::__construct($context);
     }
@@ -76,6 +86,12 @@ class Download extends Action
      */
     public function execute()
     {
+        /** @var Redirect $resultRedirect */
+        $resultRedirect   = $this->resultRedirectFactory->create();
+        if (!$this->helper->isEnabled()) {
+            $this->messageManager->addErrorMessage(__('The Share Cart extension is disable'));
+            return $resultRedirect->setPath('checkout/cart');
+        }
         $mpShareCartToken = $this->checkoutSession->getQuote()->getMpShareCartToken();
 
         $this->printProcess->downloadPdf($mpShareCartToken);
