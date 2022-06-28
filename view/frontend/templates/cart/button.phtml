@@ -52,7 +52,7 @@
                 <?php if ($item->getProductType() === 'configurable'): ?>
                     <?= /** @noEscape */ ($item->getQty() . ' x ' .
                         $block->getNameConfigurable($item) . ' - ' .
-                        $block->formatPrice($item->getBasePriceInclTax()))
+                        $block->formatPrice($item->getBasePrice()))
                     ?>
                 <?php endif; ?>
                 <?php if ($item->getParentItemId() && $block->checkConfigurableProduct($item)): ?>
@@ -61,7 +61,7 @@
                 <?php if ($item->getProductType() !== 'configurable'): ?>
                     <?= /** @noEscape */ ($item->getQty() . ' x ' .
                     $item->getName() . ' - ' .
-                    $block->formatPrice($item->getBasePriceInclTax())) ?>
+                    $block->formatPrice($item->getBasePrice())) ?>
                 <?php endif; ?>
                 <br>
             <?php endforeach ?>
