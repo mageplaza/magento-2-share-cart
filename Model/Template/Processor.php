@@ -117,7 +117,7 @@ class Processor extends Template
         $this->setUseAbsoluteLinks(true);
         $html = $processor->setStoreId($storeId)
             ->setDesignParams([0])
-            ->filter(__($this->getTemplateHtml()));
+            ->filter((string)__($this->getTemplateHtml()));
 
         if ($isDesignApplied) {
             $this->cancelDesignConfig();
