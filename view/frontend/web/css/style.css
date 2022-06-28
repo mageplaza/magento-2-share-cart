@@ -20,7 +20,9 @@
 .actions .primary.sharecart {
     margin: 0 10px 15px;
 }
-
+button, a.action.primary {
+    margin: 2px;
+}
 button.action.primary.sharecart {
     display: block;
     width: 100%;
