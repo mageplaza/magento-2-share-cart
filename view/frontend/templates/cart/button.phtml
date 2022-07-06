@@ -41,9 +41,8 @@
         </button>
         <button data-bind="click:function(){}"
                 name="action_sharecart_link"
-                class="action_sharecart_link"
-                title="<?= $block->escapeHtml(__('Share Cart')) ?>"
-                class="download cart">
+                class="action_sharecart_link download cart"
+                title="<?= $block->escapeHtml(__('Share Cart')) ?>">
             <span><?= /** @noEscape */ __('Share Cart') ?></span>
         </button>
     </script>
@@ -53,7 +52,7 @@
                 <?php if ($item->getProductType() === 'configurable'): ?>
                     <?= /** @noEscape */ ($item->getQty() . ' x ' .
                         $block->getNameConfigurable($item) . ' - ' .
-                        $block->formatPrice($item->getBasePriceInclTax()))
+                        $block->formatPrice($item->getBasePrice()))
                     ?>
                 <?php endif; ?>
                 <?php if ($item->getParentItemId() && $block->checkConfigurableProduct($item)): ?>
@@ -62,7 +61,7 @@
                 <?php if ($item->getProductType() !== 'configurable'): ?>
                     <?= /** @noEscape */ ($item->getQty() . ' x ' .
                     $item->getName() . ' - ' .
-                    $block->formatPrice($item->getBasePriceInclTax())) ?>
+                    $block->formatPrice($item->getBasePrice())) ?>
                 <?php endif; ?>
                 <br>
             <?php endforeach ?>
