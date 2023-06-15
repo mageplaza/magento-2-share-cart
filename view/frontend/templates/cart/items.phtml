@@ -22,6 +22,7 @@
 /** @var \Mageplaza\ShareCart\Block\Cart\Items $block */
 
 $quote = $block->getData('quote');
+$preBundleItemId = null;
 ?>
 
 <table>
@@ -45,13 +46,24 @@ $quote = $block->getData('quote');
         <?php if ($item->getParentItemId() && $block->checkConfigurableProduct($item)): ?>
             <?php continue ?>
         <?php endif; ?>
+        <?php if ($item->getProductType() === 'bundle'): ?>
+            <?php $preBundleItemId = $item->getId() ?>
+        <?php endif; ?>
         <?php if ($item->getProductType() !== 'configurable'): ?>
             <tr>
                 <td><?= /** @noEscape */  $item->getQty() ?></td>
-                <td><?= /** @noEscape */  $item->getSku() ?></td>
+                <?php if($preBundleItemId && $item->getParentItemId() === $preBundleItemId):?>
+                    <td><?= /** @noEscape */  $item->getSku() . ' (Bundle Item)' ?></td>
+                <?php else:?>
+                    <td><?= /** @noEscape */  $item->getSku() ?></td>
+                <?php endif; ?>
                 <td><?= /** @noEscape */  $item->getName() ?></td>
                 <td><?= /** @noEscape */  $block->formatPrice($item->getBasePrice()) ?></td>
-                <td class="td5 mark"><?= /** @noEscape */  $block->formatPrice($item->getBaseRowTotal()) ?></td>
+                <?php if($item->getProductType() === 'bundle'):?>
+                    <td class="td5 mark"></td>
+                <?php else:?>
+                    <td class="td5 mark"><?= /** @noEscape */  $block->formatPrice($item->getBaseRowTotal()) ?></td>
+                <?php endif; ?>
             </tr>
         <?php endif; ?>
     <?php endforeach ?>

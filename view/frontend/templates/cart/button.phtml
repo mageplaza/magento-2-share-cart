@@ -20,7 +20,7 @@
  */
 
 /** @var \Mageplaza\ShareCart\Block\Cart\Button $block */
-
+$preBundleItemId = null;
 ?>
 
 <?php if ($block->isEnable() && $block->getItemsCount()): ?>
@@ -58,7 +58,13 @@
                 <?php if ($item->getParentItemId() && $block->checkConfigurableProduct($item)): ?>
                     <?php continue ?>
                 <?php endif; ?>
+                <?php if ($item->getProductType() === 'bundle'): ?>
+                    <?php $preBundleItemId = $item->getId() ?>
+                <?php endif; ?>
                 <?php if ($item->getProductType() !== 'configurable'): ?>
+                    <?php if($preBundleItemId && $item->getParentItemId() === $preBundleItemId):?>
+                        <span style="display: inline-block; width: 4ch;"></span>
+                    <?php endif; ?>
                     <?= /** @noEscape */ ($item->getQty() . ' x ' .
                     $item->getName() . ' - ' .
                     $block->formatPrice($item->getBasePrice())) ?>
