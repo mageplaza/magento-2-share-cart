@@ -91,7 +91,8 @@ class CartGet
         }
 
         try {
-            $mpShareCartToken = $this->quoteFactory->create()->load($cart->getId())->getMpShareCartToken();
+            $mpShareCartToken = $cart->getMpShareCartToken()
+                ?: $this->quoteFactory->create()->load($cart->getId())->getMpShareCartToken();
         } catch (Exception $e) {
             return $cart;
         }
