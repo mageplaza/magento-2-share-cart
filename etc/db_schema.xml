@@ -23,7 +23,7 @@
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
   <table name="quote" resource="default">
     <column xsi:type="varchar" name="mp_share_cart_token" nullable="true" comment="Mp Share Cart Token"/>
-    <index referenceId="QUOTE_MP_SHARE_CART_TOKEN" indexType="index">
+    <index referenceId="QUOTE_MP_SHARE_CART_TOKEN" indexType="btree">
       <column name="mp_share_cart_token"/>
     </index>
   </table>
