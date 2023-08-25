@@ -1,0 +1,10 @@
+{
+    "quote": {
+        "column": {
+            "mp_share_cart_token": true
+        },
+        "index": {
+            "QUOTE_MP_SHARE_CART_TOKEN": true
+        }
+    }
+}
