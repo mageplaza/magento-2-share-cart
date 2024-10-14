@@ -26,6 +26,9 @@ use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\Core\Helper\AbstractData;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
+use Magento\Checkout\CustomerData\Cart as CustomerCart;
 
 /**
  * Class Data
@@ -42,20 +45,44 @@ class Data extends AbstractData
     protected $priceCurrency;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    protected $scopeConfig;
+
+    /**
+     * @var ThemeProviderInterface
+     */
+    protected $themeProvider;
+
+    /**
+     * @var CustomerCart
+     */
+    protected $customerCart;
+
+    /**
      * Data constructor.
      *
      * @param Context $context
      * @param ObjectManagerInterface $objectManager
      * @param StoreManagerInterface $storeManager
      * @param PriceCurrencyInterface $priceCurrency
+     * @param ScopeConfigInterface $scopeConfig
+     * @param ThemeProviderInterface $themeProvider
+     * @param CustomerCart $customerCart
      */
     public function __construct(
         Context $context,
         ObjectManagerInterface $objectManager,
         StoreManagerInterface $storeManager,
-        PriceCurrencyInterface $priceCurrency
+        PriceCurrencyInterface $priceCurrency,
+        ScopeConfigInterface $scopeConfig,
+        ThemeProviderInterface $themeProvider,
+        CustomerCart $customerCart
     ) {
         $this->priceCurrency = $priceCurrency;
+        $this->scopeConfig   = $scopeConfig;
+        $this->themeProvider = $themeProvider;
+        $this->customerCart  = $customerCart;
 
         parent::__construct($context, $objectManager, $storeManager);
     }
@@ -156,5 +183,28 @@ class Data extends AbstractData
                 $scope
             )
             : $this->priceCurrency->convert($amount, $scope);
+    }
+
+    public function isHyvaAvailable()
+    {
+        if ($this->isEnabled()) {
+            $themeId = $this->scopeConfig->getValue(
+                'design/theme/theme_id',
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            );
+
+            $theme = $this->themeProvider->getThemeById($themeId);
+
+            if ($theme && str_contains($theme->getCode(), 'Hyva')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function getShareCartUrl()
+    {
+        return $this->customerCart->getSectionData();
     }
 }
