@@ -22,6 +22,7 @@
 namespace Mageplaza\ShareCart\Block\Cart;
 
 use Magento\Catalog\Model\ProductRepository;
+use Magento\Checkout\CustomerData\Cart as CustomerCart;
 use Magento\Checkout\Model\Session;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Eav\Model\Entity\Collection\AbstractCollection;
@@ -71,6 +72,11 @@ class Button extends Template
     protected $helper;
 
     /**
+     * @var CustomerCart
+     */
+    protected $customerCart;
+
+    /**
      * Button constructor.
      *
      * @param Context $context
@@ -88,6 +94,7 @@ class Button extends Template
         Configurable $configurable,
         PriceCurrencyInterface $priceCurrency,
         Data $helper,
+        CustomerCart $customerCart,
         array $data = []
     ) {
         $this->checkoutSession    = $checkoutSession;
@@ -95,7 +102,7 @@ class Button extends Template
         $this->configurable       = $configurable;
         $this->priceCurrency      = $priceCurrency;
         $this->helper             = $helper;
-
+        $this->customerCart  = $customerCart;
         parent::__construct($context, $data);
     }
 
@@ -209,5 +216,13 @@ class Button extends Template
     public function isEnable()
     {
         return $this->helper->isEnabled();
+    }
+
+    /**
+     * @return array
+     */
+    public function getShareCartUrl()
+    {
+        return $this->customerCart->getSectionData();
     }
 }

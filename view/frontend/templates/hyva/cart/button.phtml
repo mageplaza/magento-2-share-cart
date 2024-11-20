@@ -19,34 +19,36 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
-use Mageplaza\ShareCart\Helper\Data;
-/** @var $dataHelper Data */
-/** @var \Mageplaza\ShareCart\Block\Cart\Button $block */
-/** @var \Magento\Framework\Escaper $escaper */
-/** @var \Hyva\Theme\Model\ViewModelRegistry $viewModels */
-/** @var \Hyva\Theme\ViewModel\Modal $modalViewModel */
+/** @var Button $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+/** @var Modal $modalViewModel */
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\Modal;
+use Magento\Framework\Escaper;
+use Mageplaza\ShareCart\Block\Cart\Button;
 
-$dataHelper = $this->helper(Data::class);
-$isHyvaAvailable = $dataHelper->isHyvaAvailable();
 ?>
 
-<?php if ($isHyvaAvailable && $block->getItemsCount()): ?>
+<?php if ($block->getItemsCount()): ?>
     <?php
-    $modalViewModel = $viewModels->require(\Hyva\Theme\ViewModel\Modal::class);
-    $modal      = $modalViewModel->createModal()->withTemplate('Mageplaza_ShareCart::hyva/cart/share-cart-content.phtml')->withDialogRefName("share-cart-content")->addDialogClass('w-3/4 max-h-dialog absolute');
-    $modalBlock = $modal->getContentRenderer();
-    $data = [
-        "items_count" => $block->getItemsCount(),
-        "items" => $block->getItems(),
+    $modalViewModel = $viewModels->require(Modal::class);
+    $modal          = $modalViewModel->createModal()
+        ->withTemplate('Mageplaza_ShareCart::hyva/cart/share-cart-content.phtml')
+        ->withDialogRefName("share-cart-content")->addDialogClass('w-3/4 max-h-dialog absolute');
+    $modalBlock     = $modal->getContentRenderer();
+    $data           = [
+        "items_count"      => $block->getItemsCount(),
+        "items"            => $block->getItems(),
         "base_grand_total" => $block->getBaseGrandTotal()
     ];
     $modalBlock->setData('data', $data);
     ?>
     <script>
-        function initShareCartButtons() {
+        function initShareCartButtons () {
             return {
-                moveButtons(){
-                    var updateButton = document.querySelector('.action.update.btn.btn-secondary'),
+                moveButtons () {
+                    var updateButton     = document.querySelector('.action.update.btn.btn-secondary'),
                         shareCartButtons = document.querySelector("[data-role='mp_show_download_share-tmpl']");
 
                     updateButton.insertAdjacentHTML('beforeBegin', shareCartButtons.innerHTML);
@@ -65,7 +67,8 @@ $isHyvaAvailable = $dataHelper->isHyvaAvailable();
                      class="action show cart btn btn-secondary cursor-pointer"
                      title="<?= $block->escapeHtml(__('Text')) ?>"
                      @click="show('share-cart-content', $event)">
-                    <span><?= /** @noEscape */ __('Text') ?></span>
+                    <span><?= /** @noEscape */
+                        __('Text') ?></span>
                 </div>
                 <?= $modal ?>
             </div>
@@ -73,7 +76,8 @@ $isHyvaAvailable = $dataHelper->isHyvaAvailable();
                  class="download cart btn btn-secondary cursor-pointer"
                  title="<?= $block->escapeHtml(__('PDF')) ?>"
                  onclick="location.href='<?= $block->escapeUrl($block->getLinkDownload()) ?>'">
-                <span><?= /** @noEscape */ __('PDF') ?></span>
+                <span><?= /** @noEscape */
+                    __('PDF') ?></span>
             </div>
             <div name="action_sharecart_link"
                  class="action_sharecart_link download cart btn btn-secondary cursor-pointer"
@@ -81,7 +85,8 @@ $isHyvaAvailable = $dataHelper->isHyvaAvailable();
                  @click="copyQuoteButton()"
                  onmouseleave="leaveQuoteButton()">
                 <div class="tooltip-button">
-                    <span><?= /** @noEscape */ __('Share Cart') ?></span>
+                    <span><?= /** @noEscape */
+                        __('Share Cart') ?></span>
                     <span class="mp-shareCart-button-tooltipText" id="mp-shareCart-button-tooltip">Copied!</span>
                 </div>
             </div>
@@ -89,9 +94,9 @@ $isHyvaAvailable = $dataHelper->isHyvaAvailable();
     </div>
 
     <script>
-        function copyQuoteButton() {
+        function copyQuoteButton () {
             const quoteUrl = document.createElement('textarea');
-            quoteUrl.value = '<?= $dataHelper->getShareCartUrl()['quote_url'] ?>';
+            quoteUrl.value = '<?= $block->getShareCartUrl()['quote_url'] ?>';
             document.body.appendChild(quoteUrl);
             quoteUrl.select();
             quoteUrl.setSelectionRange(0, 99999);
@@ -99,10 +104,10 @@ $isHyvaAvailable = $dataHelper->isHyvaAvailable();
             document.body.removeChild(quoteUrl);
 
             document.getElementById("mp-shareCart-button-tooltip").style.visibility = "visible";
-            document.getElementById("mp-shareCart-button-tooltip").style.opacity = 1;
+            document.getElementById("mp-shareCart-button-tooltip").style.opacity    = 1;
         }
 
-        function leaveQuoteButton() {
+        function leaveQuoteButton () {
             document.getElementById("mp-shareCart-button-tooltip").style.visibility = "hidden";
         }
     </script>
@@ -110,34 +115,35 @@ $isHyvaAvailable = $dataHelper->isHyvaAvailable();
         .tooltip-button {
             position: relative;
             display: inline-block;
+
+            .mp-shareCart-button-tooltipText {
+                visibility: hidden;
+                width: 140px;
+                background-color: #555;
+                color: #fff;
+                text-align: center;
+                border-radius: 6px;
+                padding: 5px;
+                position: absolute;
+                z-index: 1;
+                bottom: 150%;
+                left: 50%;
+                margin-left: -75px;
+                opacity: 0;
+                transition: opacity 0.3s;
+
+                ::after {
+                    content: "";
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    margin-left: -5px;
+                    border-width: 5px;
+                    border-style: solid;
+                    border-color: #555 transparent transparent transparent;
+                }
+            }
         }
 
-        .tooltip-button .mp-shareCart-button-tooltipText {
-            visibility: hidden;
-            width: 140px;
-            background-color: #555;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px;
-            position: absolute;
-            z-index: 1;
-            bottom: 150%;
-            left: 50%;
-            margin-left: -75px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .tooltip-button .mp-shareCart-button-tooltipText::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #555 transparent transparent transparent;
-        }
     </style>
 <?php endif; ?>

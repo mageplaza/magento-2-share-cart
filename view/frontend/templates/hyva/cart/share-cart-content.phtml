@@ -19,29 +19,29 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
-use Mageplaza\ShareCart\Helper\Data;
+use Hyva\Theme\Model\ViewModelRegistry;
 use Mageplaza\ShareCart\Block\Cart\Button;
-/** @var $dataHelper Data */
-/** @var $block Button*/
-/** @var \Hyva\Theme\Model\ViewModelRegistry $viewModels */
 
-$dataHelper = $this->helper(Data::class);
-$isHyvaAvailable = $dataHelper->isHyvaAvailable();
-$data      = ($block->getData('data'));
-$heroicons = $viewModels->require(\Hyva\Theme\ViewModel\HeroiconsOutline::class);
+/** @var $block Button */
+/** @var ViewModelRegistry $viewModels */
+
+$data       = $block->getData('data');
+$heroIcons  = $viewModels->require(\Hyva\Theme\ViewModel\HeroiconsOutline::class);
 ?>
 
-<?php if ($isHyvaAvailable && $data['items_count']): ?>
+<?php if ($data['items_count']): ?>
     <div id="popup-cart" class="mp-popup-cart">
         <h1 id="modal-title" class="modal-title" data-role="title">
             Shopping Cart
         </h1>
-        <div @click="hide" class="action-close" data-role="closeBtn" type="button" style="position: absolute;right: 10px;top: 3px;cursor: pointer">
-            <?= $heroicons->xHtml('w-5 h-5') ?>
+        <div @click="hide" class="action-close" data-role="closeBtn" type="button"
+             style="position: absolute;right: 10px;top: 3px;cursor: pointer">
+            <?= $heroIcons->xHtml('w-5 h-5') ?>
         </div>
         <?php foreach ($data['items'] as $item): ?>
             <?php if ($item->getProductType() === 'configurable'): ?>
-                <?= /** @noEscape */ ($item->getQty() . ' x ' .
+                <?= /** @noEscape */
+                ($item->getQty() . ' x ' .
                     $block->getNameConfigurable($item) . ' - ' .
                     $item->getBasePrice())
                 ?>
@@ -50,37 +50,37 @@ $heroicons = $viewModels->require(\Hyva\Theme\ViewModel\HeroiconsOutline::class)
                 <?php continue ?>
             <?php endif; ?>
             <?php if ($item->getProductType() !== 'configurable'): ?>
-                <?= /** @noEscape */ ($item->getQty() . ' x ' .
+                <?= /** @noEscape */
+                ($item->getQty() . ' x ' .
                     $item->getName() . ' - ' .
                     $item->getBasePrice()) ?>
             <?php endif; ?>
             <br>
         <?php endforeach ?>
         <hr>
-        <h2><span><?= /** @noEscape */ __('Total: ') ?></span><?= /** @noEscape */ $data['base_grand_total'] ?></h2>
+        <h2><span><?= /** @noEscape */
+                __('Total: ') ?></span><?= /** @noEscape */
+            $data['base_grand_total'] ?></h2>
     </div>
 
     <style>
         #popup-cart {
             display: block;
-        }
-
-        #popup-cart h2{
-            font-size: 1.6rem;
-            margin-top: 1rem;
-        }
-
-        #popup-cart h2 span{
-            font-weight: 500;
-        }
-
-        .modal-title {
-            font-weight: 300;
-            padding-bottom: 20px;
-            font-size: 26px;
-            margin-bottom: 0;
-            min-height: 1em;
-            word-wrap: break-word;
+            h2 {
+                font-size: 1.6rem;
+                margin-top: 1rem;
+                span {
+                    font-weight: 500;
+                }
+            }
+            .modal-title {
+                font-weight: 300;
+                padding-bottom: 20px;
+                font-size: 26px;
+                margin-bottom: 0;
+                min-height: 1em;
+                word-wrap: break-word;
+            }
         }
     </style>
 <?php endif; ?>

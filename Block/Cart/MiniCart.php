@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  * Mageplaza
  *
@@ -19,14 +18,16 @@
  * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <update handle="hyva_modal"/>
-    <body>
-        <referenceBlock name="mp.sharecart">
-            <action method="setTemplate">
-                <argument name="template" xsi:type="string">Mageplaza_ShareCart::hyva/cart/button.phtml</argument>
-            </action>
-        </referenceBlock>
-    </body>
-</page>
+
+namespace Mageplaza\ShareCart\Block\Cart;
+
+use Mageplaza\ShareCart\Block\Cart\Button;
+
+/**
+ * Class MiniCart
+ * @package Mageplaza\ShareCart\Block\Cart
+ */
+class MiniCart extends Button
+{
+
+}
