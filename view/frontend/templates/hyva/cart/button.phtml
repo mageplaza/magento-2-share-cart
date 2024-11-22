@@ -30,7 +30,7 @@ use Mageplaza\ShareCart\Block\Cart\Button;
 
 ?>
 
-<?php if ($block->getItemsCount()): ?>
+<?php if ($block->isEnable() && $block->getItemsCount()): ?>
     <?php
     $modalViewModel = $viewModels->require(Modal::class);
     $modal          = $modalViewModel->createModal()

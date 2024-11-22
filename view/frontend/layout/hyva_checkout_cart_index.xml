@@ -28,5 +28,10 @@
                 <argument name="template" xsi:type="string">Mageplaza_ShareCart::hyva/cart/button.phtml</argument>
             </action>
         </referenceBlock>
+        <referenceBlock name="checkout.cart">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Mageplaza_ShareCart::hyva/cart-main.phtml</argument>
+            </action>
+        </referenceBlock>
     </body>
 </page>
