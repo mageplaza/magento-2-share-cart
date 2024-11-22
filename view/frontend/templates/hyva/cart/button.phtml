@@ -70,7 +70,7 @@ use Mageplaza\ShareCart\Block\Cart\Button;
                     <span><?= /** @noEscape */
                         __('Text') ?></span>
                 </div>
-                <?= $modal ?>
+                <?= /** @noEscape */ $modal ?>
             </div>
             <div name="action_download_pdf"
                  class="download cart btn btn-secondary cursor-pointer"
@@ -96,7 +96,7 @@ use Mageplaza\ShareCart\Block\Cart\Button;
     <script>
         function copyQuoteButton () {
             const quoteUrl = document.createElement('textarea');
-            quoteUrl.value = '<?= $block->getShareCartUrl()['quote_url'] ?>';
+            quoteUrl.value = '<?= /** @noEscape */ $block->getShareCartUrl()['quote_url'] ?>';
             document.body.appendChild(quoteUrl);
             quoteUrl.select();
             quoteUrl.setSelectionRange(0, 99999);

@@ -28,7 +28,7 @@ use Mageplaza\ShareCart\Block\Cart\MiniCart;
         return {
             copyQuote () {
                 const quoteUrl = document.createElement('textarea');
-                quoteUrl.value = '<?= $block->getShareCartUrl()['quote_url'] ?>';
+                quoteUrl.value = '<?= /** @noEscape */ $block->getShareCartUrl()['quote_url'] ?>';
                 document.body.appendChild(quoteUrl);
                 quoteUrl.select();
                 quoteUrl.setSelectionRange(0, 99999);
