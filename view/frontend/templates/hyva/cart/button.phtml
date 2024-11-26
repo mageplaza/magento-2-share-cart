@@ -19,15 +19,13 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
-/** @var Button $block */
-/** @var Escaper $escaper */
-/** @var ViewModelRegistry $viewModels */
-/** @var Modal $modalViewModel */
-use Hyva\Theme\Model\ViewModelRegistry;
 use Hyva\Theme\ViewModel\Modal;
-use Magento\Framework\Escaper;
-use Mageplaza\ShareCart\Block\Cart\Button;
 
+/**
+ * @var Mageplaza\ShareCart\Block\Cart\Button $block
+ * @var Hyva\Theme\Model\ViewModelRegistry $viewModels
+ * @var Modal $modalViewModel
+ */
 ?>
 
 <?php if ($block->isEnable() && $block->getItemsCount()): ?>
@@ -40,7 +38,8 @@ use Mageplaza\ShareCart\Block\Cart\Button;
     $data           = [
         "items_count"      => $block->getItemsCount(),
         "items"            => $block->getItems(),
-        "base_grand_total" => $block->getBaseGrandTotal()
+        "base_grand_total" => $block->getBaseGrandTotal(),
+        "custom_block"     => $block
     ];
     $modalBlock->setData('data', $data);
     ?>
@@ -70,7 +69,8 @@ use Mageplaza\ShareCart\Block\Cart\Button;
                     <span><?= /** @noEscape */
                         __('Text') ?></span>
                 </div>
-                <?= /** @noEscape */ $modal ?>
+                <?= /** @noEscape */
+                $modal ?>
             </div>
             <div name="action_download_pdf"
                  class="download cart btn btn-secondary cursor-pointer"

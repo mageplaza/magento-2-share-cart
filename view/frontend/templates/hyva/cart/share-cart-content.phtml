@@ -19,14 +19,13 @@
  * @license     https://www.mageplaza.com/LICENSE.txt
  */
 
-use Hyva\Theme\Model\ViewModelRegistry;
-use Mageplaza\ShareCart\Block\Cart\Button;
-
-/** @var $block Button */
-/** @var ViewModelRegistry $viewModels */
-
-$data       = $block->getData('data');
-$heroIcons  = $viewModels->require(\Hyva\Theme\ViewModel\HeroiconsOutline::class);
+/**
+ * @var Magento\Framework\View\Element\Template $block
+ * @var Hyva\Theme\Model\ViewModelRegistry $viewModels
+ */
+$data      = $block->getData('data');
+$block     = $data['custom_block'];
+$heroIcons = $viewModels->require(\Hyva\Theme\ViewModel\HeroiconsOutline::class);
 ?>
 
 <?php if ($data['items_count']): ?>
@@ -66,13 +65,16 @@ $heroIcons  = $viewModels->require(\Hyva\Theme\ViewModel\HeroiconsOutline::class
     <style>
         #popup-cart {
             display: block;
+
             h2 {
                 font-size: 1.6rem;
                 margin-top: 1rem;
+
                 span {
                     font-weight: 500;
                 }
             }
+
             .modal-title {
                 font-weight: 300;
                 padding-bottom: 20px;
