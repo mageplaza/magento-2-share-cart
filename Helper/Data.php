@@ -52,7 +52,7 @@ class Data extends AbstractData
         Context $context,
         ObjectManagerInterface $objectManager,
         StoreManagerInterface $storeManager,
-        PriceCurrencyInterface $priceCurrency,
+        PriceCurrencyInterface $priceCurrency
     ) {
         $this->priceCurrency = $priceCurrency;
 

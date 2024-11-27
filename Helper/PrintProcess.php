@@ -103,7 +103,7 @@ class PrintProcess extends Data
         DirectoryList $directoryList,
         DateTime $dateTime,
         TimeZone $timezone,
-        Processor $templateProcessor,
+        Processor $templateProcessor
     ) {
         $this->fileSystem        = $fileSystem;
         $this->directoryList     = $directoryList;

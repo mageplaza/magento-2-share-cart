@@ -23,7 +23,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="extra_actions">
-            <block class="Mageplaza\ShareCart\Block\Cart\MiniCart" name="mp_sharecart_minicart" template="Mageplaza_ShareCart::hyva/minicart.phtml"/>
+            <block class="Mageplaza\ShareCart\Block\Cart\Button" name="mp_sharecart_minicart" template="Mageplaza_ShareCart::hyva/minicart.phtml"/>
         </referenceContainer>
     </body>
 </page>
