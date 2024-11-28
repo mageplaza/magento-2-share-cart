@@ -40,7 +40,6 @@ class Data extends AbstractData
      * @var PriceCurrencyInterface
      */
     protected $priceCurrency;
-
     /**
      * Data constructor.
      *
@@ -88,8 +87,9 @@ class Data extends AbstractData
         return $this->getModuleConfig(self::BUSINESS_CONFIG_PATH . '/address', $storeId);
     }
 
+
     /**
-     * @param null $storeId
+     * @param $storeId
      *
      * @return array|mixed
      */

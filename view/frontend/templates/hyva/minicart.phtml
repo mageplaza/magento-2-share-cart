@@ -1,0 +1,95 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_ShareCart
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+/**
+ * @var Mageplaza\ShareCart\Block\Cart\Button $block
+ */
+?>
+<?php if ($block->isEnable()): ?>
+    <script>
+        function initShareCart () {
+            return {
+                copyQuote () {
+                    const quoteUrl = document.createElement('textarea');
+                    quoteUrl.value = '<?= /** @noEscape */ $block->getShareCartUrl()['quote_url'] ?>';
+                    document.body.appendChild(quoteUrl);
+                    quoteUrl.select();
+                    quoteUrl.setSelectionRange(0, 99999);
+                    document.execCommand('copy')
+                    document.body.removeChild(quoteUrl);
+
+                    document.getElementById("mp-shareCart-tooltip").style.visibility = "visible";
+                    document.getElementById("mp-shareCart-tooltip").style.opacity    = 1;
+                },
+                leaveQuote () {
+                    document.getElementById("mp-shareCart-tooltip").style.visibility = "hidden";
+                }
+            }
+        }
+    </script>
+    <div class="w-full p-3 space-x-4 transition duration-150 ease-in-out rounded-lg
+hover:bg-gray-100 text-center cursor-pointer"
+         x-data="initShareCart()">
+        <a class="action sharecart mp-sharecart-minicart"
+           @click="copyQuote()"
+           @mouseleave="leaveQuote()">
+            <div class="tooltip">
+                <span class="underline">Share Cart</span>
+                <span class="mp-shareCart-tooltipText" id="mp-shareCart-tooltip">Copied!</span>
+            </div>
+        </a>
+    </div>
+
+    <style>
+        .tooltip {
+            position: relative;
+            display: inline-block;
+
+            .mp-shareCart-tooltipText {
+                visibility: hidden;
+                width: 140px;
+                background-color: #555;
+                color: #fff;
+                text-align: center;
+                border-radius: 6px;
+                padding: 5px;
+                position: absolute;
+                z-index: 1;
+                bottom: 150%;
+                left: 50%;
+                margin-left: -75px;
+                opacity: 0;
+                transition: opacity 0.3s;
+
+                ::after {
+                    content: "";
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    margin-left: -5px;
+                    border-width: 5px;
+                    border-style: solid;
+                    border-color: #555 transparent transparent transparent;
+                }
+            }
+        }
+    </style>
+<?php endif; ?>

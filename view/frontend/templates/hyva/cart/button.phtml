@@ -1,0 +1,149 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_ShareCart
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+use Hyva\Theme\ViewModel\Modal;
+
+/**
+ * @var Mageplaza\ShareCart\Block\Cart\Button $block
+ * @var Hyva\Theme\Model\ViewModelRegistry $viewModels
+ * @var Modal $modalViewModel
+ */
+?>
+
+<?php if ($block->isEnable() && $block->getItemsCount()): ?>
+    <?php
+    $modalViewModel = $viewModels->require(Modal::class);
+    $modal          = $modalViewModel->createModal()
+        ->withTemplate('Mageplaza_ShareCart::hyva/cart/share-cart-content.phtml')
+        ->withDialogRefName("share-cart-content")->addDialogClass('w-3/4 max-h-dialog absolute');
+    $modalBlock     = $modal->getContentRenderer();
+    $data           = [
+        "items_count"      => $block->getItemsCount(),
+        "items"            => $block->getItems(),
+        "base_grand_total" => $block->getBaseGrandTotal(),
+        "custom_block"     => $block
+    ];
+    $modalBlock->setData('data', $data);
+    ?>
+    <script>
+        function initShareCartButtons () {
+            return {
+                moveButtons () {
+                    var updateButton     = document.querySelector('.action.update.btn.btn-secondary'),
+                        shareCartButtons = document.querySelector("[data-role='mp_show_download_share-tmpl']");
+
+                    updateButton.insertAdjacentHTML('beforeBegin', shareCartButtons.innerHTML);
+                    shareCartButtons.innerHTML = '';
+                }
+            }
+        }
+    </script>
+
+    <div x-data="initShareCartButtons()">
+        <div data-role="mp_show_download_share-tmpl"
+             type="text/x-magento-template"
+             x-init="moveButtons()">
+            <div x-data="hyva.modal()">
+                <div name="action_show_cart"
+                     class="action show cart btn btn-secondary cursor-pointer"
+                     title="<?= $block->escapeHtml(__('Text')) ?>"
+                     @click="show('share-cart-content', $event)">
+                    <span><?= /** @noEscape */
+                        __('Text') ?></span>
+                </div>
+                <?= /** @noEscape */
+                $modal ?>
+            </div>
+            <div name="action_download_pdf"
+                 class="download cart btn btn-secondary cursor-pointer"
+                 title="<?= $block->escapeHtml(__('PDF')) ?>"
+                 onclick="location.href='<?= $block->escapeUrl($block->getLinkDownload()) ?>'">
+                <span><?= /** @noEscape */
+                    __('PDF') ?></span>
+            </div>
+            <div name="action_sharecart_link"
+                 class="action_sharecart_link download cart btn btn-secondary cursor-pointer"
+                 title="<?= $block->escapeHtml(__('Share Cart')) ?>"
+                 @click="copyQuoteButton()"
+                 onmouseleave="leaveQuoteButton()">
+                <div class="tooltip-button">
+                    <span><?= /** @noEscape */
+                        __('Share Cart') ?></span>
+                    <span class="mp-shareCart-button-tooltipText" id="mp-shareCart-button-tooltip">Copied!</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyQuoteButton () {
+            const quoteUrl = document.createElement('textarea');
+            quoteUrl.value = '<?= /** @noEscape */ $block->getShareCartUrl()['quote_url'] ?>';
+            document.body.appendChild(quoteUrl);
+            quoteUrl.select();
+            quoteUrl.setSelectionRange(0, 99999);
+            document.execCommand('copy')
+            document.body.removeChild(quoteUrl);
+
+            document.getElementById("mp-shareCart-button-tooltip").style.visibility = "visible";
+            document.getElementById("mp-shareCart-button-tooltip").style.opacity    = 1;
+        }
+
+        function leaveQuoteButton () {
+            document.getElementById("mp-shareCart-button-tooltip").style.visibility = "hidden";
+        }
+    </script>
+    <style>
+        .tooltip-button {
+            position: relative;
+            display: inline-block;
+
+            .mp-shareCart-button-tooltipText {
+                visibility: hidden;
+                width: 140px;
+                background-color: #555;
+                color: #fff;
+                text-align: center;
+                border-radius: 6px;
+                padding: 5px;
+                position: absolute;
+                z-index: 1;
+                bottom: 150%;
+                left: 50%;
+                margin-left: -75px;
+                opacity: 0;
+                transition: opacity 0.3s;
+
+                ::after {
+                    content: "";
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    margin-left: -5px;
+                    border-width: 5px;
+                    border-style: solid;
+                    border-color: #555 transparent transparent transparent;
+                }
+            }
+        }
+
+    </style>
+<?php endif; ?>

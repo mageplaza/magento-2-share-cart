@@ -1,0 +1,88 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_ShareCart
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+/**
+ * @var Magento\Framework\View\Element\Template $block
+ * @var Hyva\Theme\Model\ViewModelRegistry $viewModels
+ */
+$data      = $block->getData('data');
+$block     = $data['custom_block'];
+$heroIcons = $viewModels->require(\Hyva\Theme\ViewModel\HeroiconsOutline::class);
+?>
+
+<?php if ($data['items_count']): ?>
+    <div id="popup-cart" class="mp-popup-cart">
+        <h1 id="modal-title" class="modal-title" data-role="title">
+            Shopping Cart
+        </h1>
+        <div @click="hide" class="action-close" data-role="closeBtn" type="button"
+             style="position: absolute;right: 10px;top: 3px;cursor: pointer">
+            <?= $heroIcons->xHtml('w-5 h-5') ?>
+        </div>
+        <?php foreach ($data['items'] as $item): ?>
+            <?php if ($item->getProductType() === 'configurable'): ?>
+                <?= /** @noEscape */
+                ($item->getQty() . ' x ' .
+                    $block->getNameConfigurable($item) . ' - ' .
+                    $item->getBasePrice())
+                ?>
+            <?php endif; ?>
+            <?php if ($item->getParentItemId() && $block->checkConfigurableProduct($item)): ?>
+                <?php continue ?>
+            <?php endif; ?>
+            <?php if ($item->getProductType() !== 'configurable'): ?>
+                <?= /** @noEscape */
+                ($item->getQty() . ' x ' .
+                    $item->getName() . ' - ' .
+                    $item->getBasePrice()) ?>
+            <?php endif; ?>
+            <br>
+        <?php endforeach ?>
+        <hr>
+        <h2><span><?= /** @noEscape */
+                __('Total: ') ?></span><?= /** @noEscape */
+            $data['base_grand_total'] ?></h2>
+    </div>
+
+    <style>
+        #popup-cart {
+            display: block;
+
+            h2 {
+                font-size: 1.6rem;
+                margin-top: 1rem;
+
+                span {
+                    font-weight: 500;
+                }
+            }
+
+            .modal-title {
+                font-weight: 300;
+                padding-bottom: 20px;
+                font-size: 26px;
+                margin-bottom: 0;
+                min-height: 1em;
+                word-wrap: break-word;
+            }
+        }
+    </style>
+<?php endif; ?>

@@ -95,5 +95,6 @@ class Download extends Action
         $mpShareCartToken = $this->checkoutSession->getQuote()->getMpShareCartToken();
 
         $this->printProcess->downloadPdf($mpShareCartToken);
+        return $resultRedirect->setPath('checkout/cart');
     }
 }

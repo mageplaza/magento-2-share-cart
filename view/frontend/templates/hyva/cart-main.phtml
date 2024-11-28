@@ -1,0 +1,194 @@
+<?php
+/**
+ * Mageplaza
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Mageplaza.com license that is
+ * available through the world-wide-web at this URL:
+ * https://www.mageplaza.com/LICENSE.txt
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Mageplaza
+ * @package     Mageplaza_ShareCart
+ * @copyright   Copyright (c) Mageplaza (https://www.mageplaza.com/)
+ * @license     https://www.mageplaza.com/LICENSE.txt
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\Cart\CheckoutConfig;
+use Magento\Checkout\Block\Cart;
+use Magento\Framework\Escaper;
+
+/** @var Cart $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+?>
+
+<?php
+/** @var CheckoutConfig $checkoutConfigViewModel */
+$checkoutConfigViewModel = $viewModels->require(CheckoutConfig::class);
+$serializedCheckoutConfig =  $block->getItemsCount() ? $checkoutConfigViewModel->getSerializedCheckoutConfig() : 'false';
+
+?>
+<script>
+    window.checkoutConfig = <?= /* @noEscape  */ $serializedCheckoutConfig ?>;
+    window.customerData = window.checkoutConfig.customerData;
+    window.isCustomerLoggedIn = window.checkoutConfig.isCustomerLoggedIn;
+</script>
+
+<script>
+    'use strict';
+    (function( hyva, undefined ) {
+
+        let controller = new AbortController();
+
+        /**
+         * Takes a form element and submits it through fetch,
+         * then replaces the result into the document without
+         * refreshing the page
+         */
+        hyva.postCart = (form) => {
+            if (!form.action) {
+                return;
+            }
+            controller.abort();
+            controller = new AbortController();
+
+            const action = form.action;
+            const formData = new FormData(form);
+
+            if (!formData.uenc) {
+                formData.append('uenc', hyva.getUenc());
+            }
+
+            formData.append('form_key', hyva.getFormKey());
+
+            window.fetch(action, {
+                method: 'POST',
+                body: formData,
+                signal: controller.signal
+            }).then((result) => {
+                return result.text()
+            }).then((content) => {
+
+                hyva.replaceDomElement('#maincontent', content)
+
+            }).catch((error) => {
+                if (error.name !== 'AbortError') {
+                    console.error(error);
+                    typeof window.dispatchMessages !== "undefined" && window.dispatchMessages(
+                        [{
+                            type: "error",
+                            text: "<?= $escaper->escapeJs(__("Something went wrong. Please try again.")) ?>"
+                        }], 10000
+                    );
+                }
+            })
+        }
+    }( window.hyva = window.hyva || {} ));
+</script>
+
+<script>
+    function initCartForm() {
+        return {
+            cartIsEmpty: !!window.checkoutConfig,
+            checkCartShouldUpdate(data) {
+                const cart = data.cart;
+                if (!cart.items?.length) {
+                    const updateCartButton = document.querySelector('button[name="update_cart_action"]');
+                    if (updateCartButton) {
+                        updateCartButton.click();
+                    }
+                    return;
+                }
+                if (this.cartIsEmpty !== !!window.checkoutConfig) {
+                    this.cartIsEmpty = !!window.checkoutConfig;
+                    this.reloadCartContent();
+                    return;
+                }
+
+                if (cart) {
+                    if (!window.checkoutConfig) {
+                        if (cart.items.length) {
+                            this.reloadCartContent();
+                        }
+                        return;
+                    }
+
+                    const roundUp = (number) => {
+                        return Math.round(number * 100);
+                    };
+
+                    const decimalNumbersAreEqual = (number1, number2) => {
+                        return roundUp(number1) === roundUp(number2);
+                    };
+
+                    if (window.checkoutConfig && cart) {
+                        if (
+                            decimalNumbersAreEqual(
+                                cart.items.reduce((totalQty, cartItem) => totalQty + cartItem.qty, 0),
+                                window.checkoutConfig.quoteData.items_qty
+                            ) &&
+                            decimalNumbersAreEqual(
+                                cart.subtotalAmount,
+                                window.checkoutConfig.totalsData.total_segments.find((segment) => segment.code === "subtotal").value
+                            )
+                        ) {
+                            return;
+                        }
+                    }
+                }
+                this.reloadCartContent();
+            },
+            reloadCartContent() {
+                window.fetch(window.location.href, {
+                    method: "GET"
+                })
+                .then((result) => {
+                    return result.text();
+                })
+                .then((body) => {
+                    hyva.setCookie('mage-cache-sessid', '', -1, true);
+                    window.checkoutConfig = null;
+                    hyva.replaceDomElement('#maincontent', body);
+
+                    // Trigger click on the "update_cart_action" button
+                    const updateCartButton = document.querySelector('button[name="update_cart_action"]');
+                    if (updateCartButton) {
+                        updateCartButton.click();
+                    } else {
+                        console.warn('Update cart button not found.');
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                    window.location.reload();
+                });
+            },
+            onStorageChange(event) {
+                if (event.key === 'private_content_version') {
+                    window.dispatchEvent(new CustomEvent('reload-customer-section-data'));
+                }
+            }
+        };
+    }
+</script>
+
+<div x-data="initCartForm()"
+     class="cart-form clearfix"
+     @private-content-loaded.window="checkCartShouldUpdate($event.detail.data)"
+     @storage.window="onStorageChange($event)"
+>
+    <?php if ($block->getItemsCount()): ?>
+        <?= $block->getChildHtml('with-items') ?>
+    <?php else: ?>
+        <?= $block->getChildHtml('no-items') ?>
+    <?php endif; ?>
+</div>

@@ -22,6 +22,8 @@
 namespace Mageplaza\ShareCart\Helper;
 
 use Exception;
+use Magento\Checkout\CustomerData\Cart as CustomerCart;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\FileSystemException;
@@ -30,6 +32,7 @@ use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Framework\Stdlib\DateTime\TimeZone;
+use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Store\Model\StoreManagerInterface;
 use Mageplaza\ShareCart\Model\Template\Processor;
@@ -77,40 +80,43 @@ class PrintProcess extends Data
      */
     protected $templateProcessor;
 
+
     /**
-     * PrintProcess constructor.
-     *
      * @param Context $context
+     * @param ObjectManagerInterface $objectManager
+     * @param StoreManagerInterface $storeManager
+     * @param PriceCurrencyInterface $priceCurrency
+     * @param ScopeConfigInterface $scopeConfig
+     * @param ThemeProviderInterface $themeProvider
      * @param Filesystem $fileSystem
      * @param DirectoryList $directoryList
-     * @param StoreManagerInterface $storeManager
-     * @param ObjectManagerInterface $objectManager
-     * @param Data $helper
      * @param DateTime $dateTime
      * @param TimeZone $timezone
      * @param Processor $templateProcessor
-     * @param PriceCurrencyInterface $priceCurrency
      */
     public function __construct(
         Context $context,
+        ObjectManagerInterface $objectManager,
+        StoreManagerInterface $storeManager,
+        PriceCurrencyInterface $priceCurrency,
         Filesystem $fileSystem,
         DirectoryList $directoryList,
-        StoreManagerInterface $storeManager,
-        ObjectManagerInterface $objectManager,
-        Data $helper,
         DateTime $dateTime,
         TimeZone $timezone,
-        Processor $templateProcessor,
-        PriceCurrencyInterface $priceCurrency
+        Processor $templateProcessor
     ) {
         $this->fileSystem        = $fileSystem;
         $this->directoryList     = $directoryList;
-        $this->helper            = $helper;
         $this->dateTime          = $dateTime;
         $this->timezone          = $timezone;
         $this->templateProcessor = $templateProcessor;
 
-        parent::__construct($context, $objectManager, $storeManager, $priceCurrency);
+        parent::__construct(
+            $context,
+            $objectManager,
+            $storeManager,
+            $priceCurrency,
+        );
     }
 
     /**
@@ -128,6 +134,7 @@ class PrintProcess extends Data
 
     /**
      * @return string
+     * @throws Exception
      */
     public function getFileName()
     {
@@ -151,13 +158,13 @@ class PrintProcess extends Data
 
         $templateVars['quote']      = $quote;
         $templateVars['store']      = $quote->getStore();
-        $templateVars['vat_number'] = $this->helper->getVATNumber($storeId);
-        $templateVars['phone']      = $this->helper->getPhone($storeId);
-        $templateVars['contact']    = $this->helper->getEmail($storeId);
-        $templateVars['registered'] = $this->helper->getRegisteredNumber($storeId);
-        $templateVars['company']    = $this->helper->getCompanyName($storeId);
-        $templateVars['address']    = $this->helper->getAddress($storeId);
-        $templateVars['message']    = $this->helper->getWarningMessage($storeId);
+        $templateVars['vat_number'] = $this->getVATNumber($storeId);
+        $templateVars['phone']      = $this->getPhone($storeId);
+        $templateVars['contact']    = $this->getEmail($storeId);
+        $templateVars['registered'] = $this->getRegisteredNumber($storeId);
+        $templateVars['company']    = $this->getCompanyName($storeId);
+        $templateVars['address']    = $this->getAddress($storeId);
+        $templateVars['message']    = $this->getWarningMessage($storeId);
         $templateVars['timezone']   = $this->formatDate($this->dateTime->gmtDate());
 
         return $templateVars;
